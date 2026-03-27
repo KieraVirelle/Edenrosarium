@@ -1,0 +1,2991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eden</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090304;
+      --plum: #2f163f;
+      --violet: #8d56cf;
+      --violet-bright: #bf8cff;
+      --amethyst: #51256f;
+      --wine: #17091f;
+      --mist: #e7dcf2;
+      --ink: #fbf7ff;
+      --glow: #d9c0ff;
+      --panel: rgba(19, 10, 31, 0.84);
+      --panel-strong: rgba(10, 4, 18, 0.94);
+      --line: rgba(245, 238, 247, 0.14);
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.58);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: "Cormorant Garamond", serif;
+      background:
+        radial-gradient(ellipse at 50% 72%, rgba(123, 74, 173, 0.18), transparent 42%),
+        radial-gradient(circle at 24% 80%, rgba(143, 97, 201, 0.12), transparent 28%),
+        radial-gradient(circle at 78% 76%, rgba(89, 43, 133, 0.12), transparent 30%),
+        radial-gradient(circle at 50% 22%, rgba(198, 160, 255, 0.08), transparent 18%),
+        linear-gradient(180deg, #050209 0%, #0b0514 34%, #1a0b28 68%, #06030a 100%);
+      overflow-x: hidden;
+    }
+
+    body.intro-locked {
+      overflow: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      opacity: 0.34;
+      background:
+        radial-gradient(ellipse at 50% 70%, rgba(201, 167, 255, 0.12), transparent 34%),
+        radial-gradient(circle at 18% 78%, rgba(255, 255, 255, 0.04), transparent 18%),
+        radial-gradient(circle at 82% 74%, rgba(255, 255, 255, 0.04), transparent 18%);
+      filter: blur(16px);
+    }
+
+    body::after {
+      background:
+        radial-gradient(ellipse at 50% 68%, rgba(182, 142, 245, 0.1), transparent 30%),
+        radial-gradient(circle at center, transparent 0 48%, rgba(0, 0, 0, 0.18) 74%, rgba(0, 0, 0, 0.62) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.14));
+      opacity: 0.58;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .intro-gates,
+    .fog-layer,
+    .petal-fall {
+      position: fixed;
+      inset: 0;
+    }
+
+    .intro-gates {
+      z-index: 30;
+      pointer-events: auto;
+    }
+
+    .gate {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50.5%;
+      padding: 1rem;
+      background:
+        linear-gradient(180deg, rgba(9, 5, 14, 0.98), rgba(3, 2, 6, 0.99)),
+        linear-gradient(90deg, rgba(125, 77, 163, 0.08), transparent);
+      overflow: hidden;
+      box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.78);
+    }
+
+    .gate::before,
+    .gate::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+
+    .gate::before {
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.42), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.42)),
+        radial-gradient(circle at top, rgba(125, 77, 163, 0.12), transparent 28%);
+      opacity: 0.95;
+    }
+
+    .gate::after {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 12%, transparent 88%, rgba(0, 0, 0, 0.24)),
+        radial-gradient(circle at 50% 8%, rgba(216, 211, 230, 0.04), transparent 14%);
+      opacity: 0.85;
+    }
+
+    .gate-window {
+      position: relative;
+      height: 100%;
+      border-radius: 3rem;
+      background:
+        radial-gradient(circle at center, rgba(125, 77, 163, 0.06), transparent 32%);
+      border: 1px solid rgba(216, 211, 230, 0.05);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+        inset 0 0 40px rgba(0, 0, 0, 0.55),
+        0 0 26px rgba(0, 0, 0, 0.32);
+      overflow: hidden;
+    }
+
+    .gate-window::before {
+      content: "";
+      position: absolute;
+      inset: 0.9rem;
+      border-radius: 2.4rem;
+      background:
+        linear-gradient(180deg, rgba(243, 240, 247, 0.16), transparent 8%, transparent 92%, rgba(0, 0, 0, 0.18)),
+        radial-gradient(circle at 50% 18%, rgba(237, 230, 245, 0.06), transparent 15%);
+      box-shadow:
+        inset 0 0 0 1px rgba(214, 210, 221, 0.1),
+        inset 0 0 18px rgba(255, 255, 255, 0.04);
+    }
+
+    .gate-frame {
+      position: absolute;
+      inset: 1rem;
+      border-radius: 2.5rem;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(245, 244, 247, 0.9), rgba(124, 120, 132, 0.92) 22%, rgba(54, 49, 59, 0.98) 48%, rgba(205, 202, 211, 0.88) 72%, rgba(45, 40, 49, 0.98) 100%);
+      mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      padding: 0.42rem;
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.95;
+      box-shadow: 0 0 24px rgba(255, 255, 255, 0.06);
+    }
+
+    .gate-frame::before,
+    .gate-frame::after {
+      content: "";
+      position: absolute;
+      top: 1rem;
+      bottom: 1rem;
+      width: 0.5rem;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(244, 243, 247, 0.9), rgba(82, 77, 88, 0.96) 44%, rgba(225, 223, 231, 0.86) 74%, rgba(46, 42, 51, 0.98) 100%);
+      opacity: 0.8;
+    }
+
+    .gate-frame::before {
+      left: 1.1rem;
+    }
+
+    .gate-frame::after {
+      right: 1.1rem;
+    }
+
+    .gate-vine {
+      position: absolute;
+      width: 11rem;
+      height: 11rem;
+      pointer-events: none;
+      opacity: 0.95;
+    }
+
+    .gate-vine::before,
+    .gate-vine::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      border: 4px solid rgba(214, 210, 221, 0.9);
+      box-shadow:
+        inset 0 0 0 1px rgba(53, 48, 56, 0.85),
+        0 0 10px rgba(255, 255, 255, 0.04);
+    }
+
+    .gate-vine::before {
+      inset: 0;
+      clip-path: inset(0 42% 42% 0);
+      transform: rotate(-12deg);
+    }
+
+    .gate-vine::after {
+      inset: 2.2rem 1.6rem 1.2rem 2.6rem;
+      clip-path: inset(28% 0 0 34%);
+      transform: rotate(22deg);
+    }
+
+    .gate-vine.top-left {
+      top: -0.4rem;
+      left: -0.8rem;
+    }
+
+    .gate-vine.bottom-left {
+      bottom: -1rem;
+      left: -0.6rem;
+      transform: scaleY(-1);
+    }
+
+    .gate-vine.top-right {
+      top: -0.4rem;
+      right: -0.8rem;
+      transform: scaleX(-1);
+    }
+
+    .gate-vine.bottom-right {
+      bottom: -1rem;
+      right: -0.6rem;
+      transform: scale(-1);
+    }
+
+    .gate-rose-cluster {
+      position: absolute;
+      width: 13rem;
+      height: 13rem;
+      pointer-events: none;
+      filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.34));
+    }
+
+    .gate-rose-cluster.top-left {
+      top: 0.8rem;
+      left: 0.8rem;
+    }
+
+    .gate-rose-cluster.bottom-right {
+      right: 0.8rem;
+      bottom: 0.8rem;
+    }
+
+    .gate-rose,
+    .gate-bud {
+      position: absolute;
+      border-radius: 50%;
+      background: transparent;
+    }
+
+    .gate-rose-petal,
+    .gate-bud-petal {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      border-radius: 70% 30% 65% 35% / 55% 45% 55% 45%;
+      transform-origin: center;
+      background:
+        radial-gradient(circle at 36% 32%, rgba(217, 205, 234, 0.24), transparent 18%),
+        linear-gradient(180deg, rgba(122, 63, 182, 0.98), rgba(34, 11, 49, 0.98));
+      box-shadow:
+        inset 0 0 8px rgba(255, 255, 255, 0.05),
+        0 0 12px rgba(50, 19, 82, 0.18);
+    }
+
+    .gate-rose.secondary .gate-rose-petal,
+    .gate-bud .gate-bud-petal {
+      background:
+        radial-gradient(circle at 36% 32%, rgba(191, 183, 204, 0.12), transparent 18%),
+        linear-gradient(180deg, rgba(44, 38, 56, 0.98), rgba(10, 8, 16, 0.98));
+    }
+
+    .gate-rose-core,
+    .gate-bud-core {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      translate: -50% -50%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 40% 35%, rgba(22, 12, 31, 0.86), rgba(10, 6, 16, 0.98));
+      box-shadow: inset 0 0 0 1px rgba(216, 211, 230, 0.04);
+    }
+
+    .gate-rose::before,
+    .gate-rose::after,
+    .gate-bud::before,
+    .gate-bud::after {
+      content: "";
+      position: absolute;
+      border-radius: 100% 0 100% 0;
+      background: linear-gradient(135deg, rgba(46, 42, 58, 0.96), rgba(10, 8, 15, 0.98));
+      box-shadow: inset 0 0 0 1px rgba(115, 108, 128, 0.08);
+      transform-origin: center;
+    }
+
+    .gate-rose::before,
+    .gate-bud::before {
+      width: 2rem;
+      height: 1rem;
+    }
+
+    .gate-rose::after,
+    .gate-bud::after {
+      width: 2.2rem;
+      height: 1rem;
+    }
+
+    .gate-rose::before {
+      left: -0.2rem;
+      bottom: 0.9rem;
+      rotate: 20deg;
+    }
+
+    .gate-rose::after {
+      right: -0.1rem;
+      bottom: 1rem;
+      rotate: -24deg;
+    }
+
+    .gate-bud::before {
+      left: -0.2rem;
+      bottom: 0.4rem;
+      rotate: 28deg;
+    }
+
+    .gate-bud::after {
+      right: -0.15rem;
+      bottom: 0.45rem;
+      rotate: -30deg;
+    }
+
+    .gate-rose-stem {
+      position: absolute;
+      width: 0.22rem;
+      height: 3.2rem;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(70, 64, 84, 0.95), rgba(16, 13, 24, 0.98));
+      box-shadow: inset 0 0 0 1px rgba(164, 154, 182, 0.04);
+    }
+
+    .gate-rose.main .gate-rose-core {
+      width: 1.3rem;
+      height: 1.3rem;
+    }
+
+    .gate-rose.secondary .gate-rose-core {
+      width: 0.95rem;
+      height: 0.95rem;
+    }
+
+    .gate-bud .gate-bud-core {
+      width: 0.7rem;
+      height: 0.7rem;
+    }
+
+    .gate-rose.main {
+      width: 6rem;
+      height: 6rem;
+    }
+
+    .gate-rose.secondary {
+      width: 4.6rem;
+      height: 4.6rem;
+    }
+
+    .gate-bud {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .gate-rose.main .gate-rose-petal:nth-child(1) {
+      width: 2rem;
+      height: 3rem;
+      translate: -50% -50%;
+      rotate: 0deg;
+    }
+
+    .gate-rose.main .gate-rose-petal:nth-child(2) {
+      width: 2.2rem;
+      height: 3rem;
+      translate: -58% -50%;
+      rotate: 55deg;
+    }
+
+    .gate-rose.main .gate-rose-petal:nth-child(3) {
+      width: 2.2rem;
+      height: 3rem;
+      translate: -42% -50%;
+      rotate: -55deg;
+    }
+
+    .gate-rose.main .gate-rose-petal:nth-child(4) {
+      width: 2rem;
+      height: 2.6rem;
+      translate: -50% -46%;
+      rotate: 110deg;
+    }
+
+    .gate-rose.main .gate-rose-petal:nth-child(5) {
+      width: 2rem;
+      height: 2.6rem;
+      translate: -50% -54%;
+      rotate: -110deg;
+    }
+
+    .gate-rose.secondary .gate-rose-petal:nth-child(1),
+    .gate-rose.secondary .gate-rose-petal:nth-child(2),
+    .gate-rose.secondary .gate-rose-petal:nth-child(3) {
+      width: 1.65rem;
+      height: 2.4rem;
+      translate: -50% -50%;
+    }
+
+    .gate-rose.secondary .gate-rose-petal:nth-child(1) { rotate: 0deg; }
+    .gate-rose.secondary .gate-rose-petal:nth-child(2) { rotate: 60deg; }
+    .gate-rose.secondary .gate-rose-petal:nth-child(3) { rotate: -60deg; }
+
+    .gate-bud .gate-bud-petal:nth-child(1),
+    .gate-bud .gate-bud-petal:nth-child(2) {
+      width: 1.3rem;
+      height: 2rem;
+      translate: -50% -50%;
+    }
+
+    .gate-bud .gate-bud-petal:nth-child(1) { rotate: 18deg; }
+    .gate-bud .gate-bud-petal:nth-child(2) { rotate: -18deg; }
+
+    .gate-leaf {
+      position: absolute;
+      width: 2rem;
+      height: 1rem;
+      border-radius: 50%;
+      border-radius: 100% 0 100% 0;
+      background: linear-gradient(135deg, rgba(45, 41, 57, 0.95), rgba(10, 8, 15, 0.98));
+      box-shadow: inset 0 0 0 1px rgba(115, 108, 128, 0.08);
+      transform-origin: center;
+    }
+
+    .gate-vine,
+    .gate-rose-cluster,
+    .gate-rose,
+    .gate-bud,
+    .gate-leaf,
+    .gate-rose-stem,
+    .gate-frame {
+      display: none;
+    }
+
+    .gate-window {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .gate-window::before {
+      display: none;
+    }
+
+    .gate-shadow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.52), transparent 16%, transparent 84%, rgba(0, 0, 0, 0.52)),
+        radial-gradient(circle at center, rgba(125, 77, 163, 0.24), transparent 28%),
+        radial-gradient(circle at 50% 50%, rgba(216, 211, 230, 0.08), transparent 12%);
+      opacity: 0.92;
+    }
+
+    .gate-image {
+      position: relative;
+      z-index: 1;
+      width: auto;
+      height: min(92vh, 980px);
+      max-width: 100%;
+      object-fit: contain;
+      opacity: 0.96;
+      filter:
+        contrast(1.08)
+        saturate(1.08)
+        brightness(1.02)
+        drop-shadow(0 28px 42px rgba(0, 0, 0, 0.48))
+        drop-shadow(0 0 18px rgba(125, 77, 163, 0.14));
+    }
+
+    .gate-left {
+      left: 0;
+      border-right: 1px solid rgba(216, 211, 230, 0.12);
+    }
+
+    .gate-right {
+      right: 0;
+      border-left: 1px solid rgba(216, 211, 230, 0.12);
+    }
+
+    .gate-center-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(125, 77, 163, 0.34), transparent 24%);
+      opacity: 0;
+    }
+
+    .intro-gates.gates-open {
+      animation: gates-fade 6.2s ease forwards;
+      pointer-events: none;
+    }
+
+    .intro-gates.gates-open .gate-left {
+      animation: gate-left-open 4.8s cubic-bezier(0.18, 0.75, 0.18, 1) forwards;
+    }
+
+    .intro-gates.gates-open .gate-right {
+      animation: gate-right-open 4.8s cubic-bezier(0.18, 0.75, 0.18, 1) forwards;
+    }
+
+    .intro-gates.gates-open .gate-center-glow {
+      animation: center-glow 4.2s ease forwards;
+    }
+
+    .intro-panel {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      z-index: 5;
+      padding: 1.5rem;
+      background:
+        radial-gradient(circle at center, rgba(20, 10, 31, 0.52), rgba(4, 2, 7, 0.72)),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.34));
+      transition: opacity 700ms ease;
+    }
+
+    .intro-gates.gates-open .intro-panel {
+      opacity: 0;
+    }
+
+    .enter-card {
+      width: min(30rem, calc(100% - 2rem));
+      padding: 1.9rem 1.7rem;
+      border-radius: 2.2rem;
+      text-align: center;
+      background:
+        radial-gradient(circle at 50% 22%, rgba(216, 211, 230, 0.08), transparent 14%),
+        linear-gradient(180deg, rgba(29, 16, 41, 0.94), rgba(10, 5, 15, 0.98));
+      border: 1px solid rgba(216, 211, 230, 0.16);
+      box-shadow:
+        0 24px 70px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(125, 77, 163, 0.1),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .enter-card::before {
+      content: "";
+      position: absolute;
+      inset: 0.6rem;
+      border-radius: 1.7rem;
+      border: 1px solid rgba(216, 211, 230, 0.08);
+      pointer-events: none;
+    }
+
+    .enter-card::after {
+      content: "";
+      position: absolute;
+      top: -2.8rem;
+      left: 50%;
+      width: 9rem;
+      height: 9rem;
+      translate: -50% 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(125, 77, 163, 0.2), transparent 68%);
+      pointer-events: none;
+    }
+
+    .enter-rose {
+      position: absolute;
+      z-index: 0;
+      width: 10rem;
+      height: auto;
+      opacity: 0.5;
+      pointer-events: none;
+      filter:
+        drop-shadow(0 12px 20px rgba(0, 0, 0, 0.28))
+        drop-shadow(0 0 12px rgba(125, 77, 163, 0.12));
+    }
+
+    .enter-rose.left {
+      left: -1.2rem;
+      top: -1.35rem;
+      transform: scaleX(-1) scaleY(-1) rotate(8deg);
+      transform-origin: top left;
+      opacity: 0.38;
+    }
+
+    .enter-rose.right {
+      right: -1.25rem;
+      bottom: -1.2rem;
+      transform: rotate(-6deg);
+      transform-origin: bottom right;
+      opacity: 0.5;
+    }
+
+    .enter-kicker {
+      display: block;
+      margin-bottom: 0.85rem;
+      color: var(--mist);
+      font-family: "Cinzel", serif;
+      font-size: 0.74rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      opacity: 0.88;
+    }
+
+    .enter-card h2 {
+      font-family: "Cinzel Decorative", serif;
+      font-size: clamp(2.6rem, 5vw, 4.25rem);
+      margin: 0;
+      letter-spacing: 0.06em;
+      text-shadow:
+        0 0 18px rgba(244, 231, 255, 0.15),
+        0 0 44px rgba(125, 77, 163, 0.34);
+      position: relative;
+      z-index: 1;
+    }
+
+    .enter-divider {
+      width: 7rem;
+      height: 1px;
+      margin: 1rem auto 1rem;
+      background: linear-gradient(90deg, transparent, rgba(216, 211, 230, 0.52), transparent);
+    }
+
+    .enter-card p {
+      margin: 0 0 1.35rem;
+      color: var(--mist);
+      font-size: 1.12rem;
+      line-height: 1.45;
+      max-width: 24rem;
+      margin-inline: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .enter-button {
+      appearance: none;
+      border: 1px solid rgba(216, 211, 230, 0.18);
+      background:
+        linear-gradient(135deg, rgba(150, 101, 194, 0.4), rgba(43, 13, 58, 0.92));
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 1rem 1.7rem;
+      min-width: 13rem;
+      font-family: "Cinzel", serif;
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      box-shadow:
+        0 14px 30px rgba(0, 0, 0, 0.26),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .enter-button:hover,
+    .enter-button:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(216, 211, 230, 0.3);
+      box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.32),
+        0 0 18px rgba(125, 77, 163, 0.18);
+      outline: none;
+    }
+
+    .enter-button.is-entering {
+      opacity: 0.7;
+      transform: scale(0.98);
+    }
+
+    .fog-layer {
+      z-index: 3;
+      overflow: hidden;
+    }
+
+    .fog {
+      position: absolute;
+      left: -20%;
+      right: -20%;
+      height: 42vh;
+      background: radial-gradient(ellipse at center, rgba(216, 211, 230, 0.14), transparent 62%);
+      filter: blur(12px);
+      opacity: 0;
+    }
+
+    .fog.one {
+      bottom: 0;
+      animation: fog-rise 7s ease-out forwards, fog-drift-a 18s ease-in-out infinite 2.2s;
+    }
+
+    .fog.two {
+      bottom: 8vh;
+      animation: fog-rise 8s ease-out 0.5s forwards, fog-drift-b 22s ease-in-out infinite 2.6s;
+    }
+
+    .petal-fall {
+      z-index: 2;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .petal {
+      position: absolute;
+      top: -18vh;
+      width: var(--size);
+      height: calc(var(--size) * 1.3);
+      opacity: 0.82;
+      background: center / contain no-repeat url("images/SingleRosePetal.png");
+      filter:
+        drop-shadow(0 8px 18px rgba(36, 10, 51, 0.24))
+        drop-shadow(0 0 10px rgba(160, 118, 204, 0.12));
+      transform: translate3d(0, -14vh, 0) rotate(0deg);
+      animation-name: petal-fall, petal-sway, petal-spin;
+      animation-timing-function: cubic-bezier(0.3, 0.04, 0.76, 0.98), ease-in-out, linear;
+      animation-iteration-count: infinite;
+      will-change: transform;
+    }
+
+    .page {
+      position: relative;
+      z-index: 4;
+      width: min(1180px, calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    header {
+      position: relative;
+      z-index: 10;
+      padding-top: 1.2rem;
+    }
+
+    .nav {
+      display: grid;
+      gap: 1.1rem;
+    }
+
+    .brand {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      width: min(100%, 58rem);
+      margin: 0 auto;
+      padding: 1.35rem 1.6rem;
+      border-radius: 2rem;
+      background:
+        linear-gradient(180deg, rgba(35, 14, 49, 0.82), rgba(9, 4, 17, 0.94)),
+        radial-gradient(circle at 50% 0%, rgba(214, 187, 255, 0.18), transparent 40%);
+      border: 1px solid rgba(214, 187, 255, 0.14);
+      box-shadow:
+        0 20px 48px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07),
+        0 0 30px rgba(141, 86, 207, 0.1);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+    }
+
+    .brand-logo {
+      width: 7.6rem;
+      height: 7.6rem;
+      object-fit: contain;
+      filter:
+        drop-shadow(0 14px 22px rgba(0, 0, 0, 0.42))
+        drop-shadow(0 0 28px rgba(141, 86, 207, 0.42));
+      flex: 0 0 auto;
+    }
+
+    .sigil {
+      width: 3.1rem;
+      height: 3.5rem;
+      clip-path: polygon(50% 0%, 88% 18%, 100% 55%, 74% 100%, 26% 100%, 0% 55%, 12% 18%);
+      background:
+        radial-gradient(circle at 50% 35%, rgba(244, 239, 251, 0.9), transparent 16%),
+        linear-gradient(180deg, #d8d3e6 0%, #7d4da3 42%, #2b0d3a 100%);
+      border: 1px solid rgba(216, 211, 230, 0.26);
+      box-shadow:
+        inset 0 0 20px rgba(255, 255, 255, 0.12),
+        0 0 24px rgba(125, 77, 163, 0.28);
+    }
+
+    .brand-copy {
+      font-family: "Cinzel Decorative", serif;
+      font-size: clamp(2.2rem, 5vw, 4.15rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      line-height: 0.92;
+      color: #fff7ff;
+      text-align: center;
+      text-shadow:
+        0 0 18px rgba(0, 0, 0, 0.36),
+        0 0 28px rgba(157, 101, 227, 0.24);
+    }
+
+    .brand-copy span {
+      display: block;
+      margin-top: 0.7rem;
+      color: var(--mist);
+      font-family: "Cinzel", serif;
+      font-size: 0.76rem;
+      letter-spacing: 0.3em;
+      opacity: 0.9;
+    }
+
+    .brand-location {
+      display: block;
+      margin-top: 0.9rem;
+      padding-top: 0.75rem;
+      color: #e6c8ff;
+      font-family: "Cinzel", serif;
+      font-size: 0.84rem;
+      letter-spacing: 0.22em;
+      opacity: 0.98;
+      text-transform: uppercase;
+      border-top: 1px solid rgba(214, 187, 255, 0.18);
+      text-shadow: 0 0 16px rgba(141, 86, 207, 0.2);
+    }
+
+    nav {
+      display: grid;
+      grid-template-columns: repeat(5, max-content);
+      gap: 0.9rem 0.9rem;
+      align-items: center;
+      justify-content: center;
+      width: min(100%, 60rem);
+      margin: 0 auto;
+      padding: 1rem 1.15rem;
+      border-radius: 1.7rem;
+      background:
+        linear-gradient(180deg, rgba(29, 12, 43, 0.82), rgba(9, 4, 17, 0.92)),
+        radial-gradient(circle at 50% 0%, rgba(214, 187, 255, 0.12), transparent 44%);
+      border: 1px solid rgba(214, 187, 255, 0.12);
+      box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+    }
+
+    nav a {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 3.2rem;
+      min-width: 9.5rem;
+      padding: 0.88rem 1.3rem;
+      color: var(--ink);
+      border: 1px solid rgba(226, 190, 255, 0.34);
+      border-radius: 1.2rem;
+      font-family: "Cinzel", serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-align: center;
+      text-transform: uppercase;
+      overflow: hidden;
+      isolation: isolate;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.18), transparent 52%),
+        linear-gradient(180deg, rgba(201, 153, 255, 0.24), rgba(39, 20, 54, 0.36) 44%, rgba(13, 8, 18, 0.98) 100%),
+        linear-gradient(135deg, rgba(64, 32, 86, 0.98), rgba(18, 10, 28, 0.98));
+      box-shadow:
+        0 16px 30px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        inset 0 -16px 22px rgba(12, 5, 20, 0.42),
+        0 0 24px rgba(125, 77, 163, 0.16);
+      text-shadow: 0 0 10px rgba(214, 187, 255, 0.18);
+      transition: color 180ms ease, border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    nav a::before {
+      content: "";
+      position: absolute;
+      inset: 0.08rem;
+      border-radius: inherit;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.1) 24%, rgba(255, 255, 255, 0) 60%),
+        linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+      opacity: 0.95;
+      pointer-events: none;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      inset: auto 18% 0.42rem;
+      height: 0.2rem;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(241, 219, 255, 0.92), transparent);
+      opacity: 0.84;
+      filter: blur(0.35px);
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    nav a:hover,
+    nav a:focus-visible {
+      color: var(--ink);
+      border-color: rgba(242, 222, 255, 0.72);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.24), transparent 52%),
+        linear-gradient(180deg, rgba(231, 181, 255, 0.34), rgba(68, 33, 93, 0.44) 44%, rgba(17, 8, 28, 0.98) 100%),
+        linear-gradient(135deg, rgba(88, 42, 120, 0.98), rgba(23, 11, 37, 0.98));
+      box-shadow:
+        0 20px 34px rgba(0, 0, 0, 0.36),
+        inset 0 1px 0 rgba(255, 255, 255, 0.26),
+        inset 0 -16px 22px rgba(20, 8, 31, 0.36),
+        0 0 34px rgba(179, 115, 255, 0.36);
+      transform: translateY(-3px) scale(1.03);
+      outline: none;
+    }
+
+    nav a:hover::before,
+    nav a:focus-visible::before {
+      opacity: 1;
+    }
+
+    nav a:hover::after,
+    nav a:focus-visible::after {
+      opacity: 0.96;
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      align-items: center;
+      min-height: calc(100vh - 84px);
+      padding: 8.75rem 0 5.75rem;
+      max-width: 56rem;
+    }
+
+    .hero-shell {
+      position: relative;
+      display: grid;
+      gap: 1.4rem;
+      padding: clamp(2rem, 4vw, 3.1rem);
+      border-radius: 2rem;
+      background:
+        linear-gradient(180deg, rgba(44, 20, 61, 0.94), rgba(17, 8, 28, 0.92)),
+        radial-gradient(circle at 50% 0%, rgba(214, 187, 255, 0.18), transparent 34%);
+      border: 1px solid rgba(214, 187, 255, 0.24);
+      box-shadow:
+        0 28px 80px rgba(0, 0, 0, 0.42),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 0 40px rgba(109, 57, 166, 0.18);
+      color: var(--ink);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.54), transparent 12%, transparent 88%, rgba(0, 0, 0, 0.54)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 16%, transparent 90%, rgba(0, 0, 0, 0.24)),
+        radial-gradient(circle at 50% 14%, rgba(255, 255, 255, 0.08), transparent 22%);
+      opacity: 0.62;
+      pointer-events: none;
+    }
+
+    .hero-shell::after {
+      content: "";
+      position: absolute;
+      inset: 1rem;
+      border: 1px solid rgba(214, 187, 255, 0.12);
+      border-radius: 1.55rem;
+      pointer-events: none;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      font-family: "Cinzel", serif;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-family: "UnifrakturCook", "Cinzel Decorative", serif;
+      font-size: clamp(4rem, 8vw, 7.4rem);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      color: #c790ff;
+      text-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.16),
+        0 0 24px rgba(141, 86, 207, 0.28),
+        0 6px 18px rgba(0, 0, 0, 0.32);
+    }
+
+    .tagline {
+      margin-top: 0;
+      color: var(--mist);
+      font-family: "Cinzel", serif;
+      font-size: clamp(1rem, 1.4vw, 1.16rem);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .bio-card {
+      position: relative;
+      margin-top: 0.4rem;
+      padding: 1.6rem 1.6rem;
+      border-radius: 1.55rem;
+      background:
+        linear-gradient(180deg, rgba(26, 14, 41, 0.96), rgba(11, 6, 20, 0.98)),
+        var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow:
+        0 26px 54px rgba(0, 0, 0, 0.24),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .bio-card::before {
+      content: "";
+      position: absolute;
+      width: 1rem;
+      height: 1rem;
+      left: 50%;
+      top: 50%;
+      translate: -50% -50%;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(141, 86, 207, 0.32), transparent 72%);
+      transform: scale(0);
+      opacity: 0;
+      transition: transform 560ms ease, opacity 260ms ease;
+      z-index: -1;
+    }
+
+    .bio-card::after,
+    .mini-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0.65rem;
+      border-radius: inherit;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      pointer-events: none;
+    }
+
+    .bio-card:hover::before {
+      transform: scale(30);
+      opacity: 1;
+    }
+
+    .bio-card p {
+      margin: 0;
+      color: var(--mist);
+      font-size: clamp(1.12rem, 1.5vw, 1.28rem);
+      line-height: 1.56;
+    }
+
+    .feature-frame {
+      position: relative;
+      min-height: 38rem;
+      padding: 1rem;
+      border-radius: 2.5rem;
+      background:
+        linear-gradient(180deg, rgba(221, 211, 236, 0.04), rgba(18, 7, 26, 0.44)),
+        linear-gradient(135deg, rgba(32, 12, 45, 0.94), rgba(7, 3, 11, 0.98));
+      border: 1px solid rgba(216, 211, 230, 0.1);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .feature-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0.65rem;
+      border-radius: 2rem;
+      border: 1px solid rgba(216, 211, 230, 0.08);
+      pointer-events: none;
+    }
+
+    .feature-panel {
+      position: relative;
+      height: 100%;
+      min-height: 36rem;
+      border-radius: 2rem;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(13, 6, 8, 0.94), rgba(8, 4, 5, 0.98));
+      isolation: isolate;
+    }
+
+    .feature-panel::before,
+    .feature-panel::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .feature-panel::before {
+      background:
+        linear-gradient(90deg, transparent 0 16%, rgba(5, 3, 8, 0.96) 16% 17.6%, transparent 17.6% 48.8%, rgba(5, 3, 8, 0.96) 48.8% 51.2%, transparent 51.2% 82.4%, rgba(5, 3, 8, 0.96) 82.4% 84%, transparent 84% 100%),
+        linear-gradient(180deg, transparent 0 18%, rgba(5, 3, 8, 0.94) 18% 19.5%, transparent 19.5% 52%, rgba(5, 3, 8, 0.94) 52% 53.6%, transparent 53.6% 86%, rgba(5, 3, 8, 0.94) 86% 87.5%, transparent 87.5% 100%);
+      opacity: 0.94;
+    }
+
+    .feature-panel::after {
+      background:
+        radial-gradient(circle at 50% 18%, rgba(243, 232, 255, 0.08), transparent 12%),
+        radial-gradient(circle at 50% 55%, rgba(125, 77, 163, 0.12), transparent 22%);
+    }
+
+    .window-arch {
+      position: absolute;
+      top: 1.25rem;
+      bottom: 1.25rem;
+      width: 30%;
+      border-radius: 8rem 8rem 1rem 1rem;
+      border: 1px solid rgba(216, 211, 230, 0.08);
+      background:
+        radial-gradient(circle at 50% 24%, rgba(216, 211, 230, 0.12), transparent 18%),
+        linear-gradient(180deg, rgba(109, 76, 145, 0.34), rgba(39, 15, 56, 0.2) 54%, rgba(12, 5, 18, 0.12) 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+        inset 0 0 26px rgba(0, 0, 0, 0.24);
+      overflow: hidden;
+    }
+
+    .window-arch::before,
+    .window-arch::after {
+      content: "";
+      position: absolute;
+      inset: 0.5rem;
+      border-radius: inherit;
+    }
+
+    .window-arch::before {
+      background:
+        linear-gradient(90deg, transparent 0 24%, rgba(9, 5, 14, 0.95) 24% 25.6%, transparent 25.6% 49%, rgba(9, 5, 14, 0.95) 49% 50.7%, transparent 50.7% 74%, rgba(9, 5, 14, 0.95) 74% 75.6%, transparent 75.6% 100%),
+        linear-gradient(180deg, transparent 0 18%, rgba(9, 5, 14, 0.95) 18% 19.5%, transparent 19.5% 48%, rgba(9, 5, 14, 0.95) 48% 49.5%, transparent 49.5% 78%, rgba(9, 5, 14, 0.95) 78% 79.5%, transparent 79.5% 100%);
+      opacity: 0.9;
+    }
+
+    .window-arch::after {
+      background:
+        radial-gradient(circle at 50% 70%, rgba(125, 77, 163, 0.2), transparent 28%),
+        linear-gradient(60deg, transparent 0 42%, rgba(9, 5, 14, 0.9) 42.5% 43.6%, transparent 44% 100%),
+        linear-gradient(120deg, transparent 0 42%, rgba(9, 5, 14, 0.9) 42.5% 43.6%, transparent 44% 100%);
+      opacity: 0.75;
+    }
+
+    .window-arch.left {
+      left: 1.8rem;
+    }
+
+    .window-arch.right {
+      right: 1.8rem;
+    }
+
+    .rose-medallion {
+      position: absolute;
+      top: 50%;
+      width: 5.5rem;
+      height: 5.5rem;
+      translate: 0 -50%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(15, 6, 20, 0.96) 0 18%, transparent 18.8%),
+        radial-gradient(circle at 35% 30%, rgba(216, 211, 230, 0.46), transparent 14%),
+        radial-gradient(circle at 50% 50%, rgba(125, 77, 163, 0.95), rgba(75, 31, 92, 0.95) 70%, rgba(14, 5, 21, 0.98) 100%);
+      border: 1px solid rgba(216, 211, 230, 0.12);
+      box-shadow:
+        inset 0 0 22px rgba(255, 255, 255, 0.1),
+        0 0 22px rgba(125, 77, 163, 0.2);
+    }
+
+    .rose-medallion.left {
+      left: 10%;
+    }
+
+    .rose-medallion.right {
+      right: 10%;
+    }
+
+    .rose-medallion::before {
+      content: "";
+      position: absolute;
+      inset: 14%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, transparent 0 22%, rgba(15, 6, 20, 0.95) 22.4% 24.2%, transparent 24.8%),
+        conic-gradient(from 0deg, rgba(15, 6, 20, 0.92) 0 10%, transparent 10% 18%, rgba(15, 6, 20, 0.92) 18% 28%, transparent 28% 36%, rgba(15, 6, 20, 0.92) 36% 46%, transparent 46% 54%, rgba(15, 6, 20, 0.92) 54% 64%, transparent 64% 72%, rgba(15, 6, 20, 0.92) 72% 82%, transparent 82% 90%, rgba(15, 6, 20, 0.92) 90% 100%);
+      opacity: 0.72;
+    }
+
+    .center-band {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 9rem;
+      translate: 0 -50%;
+      background:
+        linear-gradient(180deg, rgba(12, 5, 18, 0.98), rgba(7, 2, 10, 0.98)),
+        linear-gradient(135deg, rgba(125, 77, 163, 0.24), rgba(0, 0, 0, 0));
+      border-top: 1px solid rgba(216, 211, 230, 0.08);
+      border-bottom: 1px solid rgba(216, 211, 230, 0.08);
+      box-shadow:
+        inset 0 10px 18px rgba(255, 255, 255, 0.02),
+        inset 0 -10px 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .center-oval {
+      position: absolute;
+      inset: 3.3rem 5rem;
+      border-radius: 999px;
+      border: 12px solid rgba(8, 3, 12, 0.96);
+      background:
+        radial-gradient(circle at 50% 24%, rgba(244, 230, 255, 0.2), transparent 10%),
+        radial-gradient(circle at center, rgba(125, 77, 163, 0.95), rgba(75, 31, 92, 0.96) 68%, rgba(15, 5, 25, 0.98) 100%);
+      box-shadow:
+        inset 0 0 34px rgba(255, 255, 255, 0.08),
+        0 0 48px rgba(125, 77, 163, 0.2);
+    }
+
+    .center-oval::before,
+    .center-oval::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      width: 2.6rem;
+      height: 2.6rem;
+      translate: -50% 0;
+      clip-path: polygon(50% 0%, 82% 22%, 100% 50%, 82% 78%, 50% 100%, 18% 78%, 0 50%, 18% 22%);
+      background:
+        radial-gradient(circle at 50% 35%, rgba(240, 216, 255, 0.8), transparent 22%),
+        linear-gradient(180deg, #d8d3e6 0%, #7d4da3 48%, #1c0b2e 100%);
+      border: 1px solid rgba(216, 211, 230, 0.16);
+      box-shadow: 0 0 18px rgba(125, 77, 163, 0.2);
+    }
+
+    .center-oval::before {
+      top: -1.6rem;
+    }
+
+    .center-oval::after {
+      bottom: -1.6rem;
+    }
+
+    .feature-copy {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .feature-logo {
+      position: relative;
+      z-index: 1;
+      width: min(68%, 19rem);
+      height: auto;
+      object-fit: contain;
+      filter:
+        drop-shadow(0 18px 28px rgba(0, 0, 0, 0.34))
+        drop-shadow(0 0 18px rgba(125, 77, 163, 0.18));
+    }
+
+    .feature-logo-frame {
+      position: absolute;
+      inset: 18% 20%;
+      border-radius: 999px;
+      border: 1px solid rgba(216, 211, 230, 0.08);
+      background: radial-gradient(circle at 50% 30%, rgba(216, 211, 230, 0.04), transparent 18%);
+      pointer-events: none;
+    }
+
+    .sections {
+      display: grid;
+      gap: 1.4rem;
+      padding-bottom: 4rem;
+    }
+
+    .section-card {
+      position: relative;
+      padding: 1.95rem;
+      border-radius: 1.75rem;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(0, 0, 0, 0.06)),
+        var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .section-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.04), transparent 28%),
+        linear-gradient(315deg, rgba(141, 86, 207, 0.12), transparent 30%);
+      pointer-events: none;
+    }
+
+    .section-card::after {
+      content: "";
+      position: absolute;
+      width: 1rem;
+      height: 1rem;
+      left: 50%;
+      top: 50%;
+      translate: -50% -50%;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(141, 86, 207, 0.28), transparent 72%);
+      transform: scale(0);
+      opacity: 0;
+      transition: transform 560ms ease, opacity 260ms ease;
+      z-index: -1;
+    }
+
+    .section-card:hover::after {
+      transform: scale(36);
+      opacity: 1;
+    }
+
+    .section-label {
+      display: inline-block;
+      margin-bottom: 0.75rem;
+      color: #d8c6ee;
+      font-family: "Cinzel", serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .section-card p {
+      position: relative;
+      z-index: 1;
+      margin: 0.85rem 0 0;
+      color: var(--mist);
+      font-size: 1.1rem;
+      line-height: 1.5;
+      max-width: 48rem;
+    }
+
+    .section-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    .mini-panel {
+      position: relative;
+      padding: 1.15rem;
+      border-radius: 1.2rem;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(0, 0, 0, 0.08));
+      border: 1px solid rgba(222, 212, 215, 0.1);
+      overflow: hidden;
+    }
+
+    .mini-panel strong {
+      display: block;
+      font-family: "Cinzel", serif;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+    }
+
+    .mini-panel span {
+      display: block;
+      margin-top: 0.45rem;
+      color: var(--mist);
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
+    .vip-section {
+      position: relative;
+      margin: 1rem 0 4rem;
+      padding: 2.2rem;
+      border-radius: 2rem;
+      background:
+        radial-gradient(circle at top, rgba(226, 173, 255, 0.16), transparent 26%),
+        linear-gradient(180deg, rgba(37, 15, 54, 0.96), rgba(10, 4, 18, 0.98));
+      border: 1px solid rgba(221, 190, 255, 0.18);
+      box-shadow:
+        0 36px 90px rgba(0, 0, 0, 0.4),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 0 44px rgba(141, 86, 207, 0.16);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .vip-section::before,
+    .vip-section::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .vip-section::before {
+      inset: 0;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.05), transparent 22%),
+        radial-gradient(circle at 86% 16%, rgba(212, 164, 255, 0.12), transparent 18%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.04), transparent 22%);
+      opacity: 0.9;
+    }
+
+    .vip-section::after {
+      inset: 1rem;
+      border-radius: 1.5rem;
+      border: 1px solid rgba(221, 190, 255, 0.08);
+    }
+
+    .vip-header {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      justify-items: center;
+      text-align: center;
+      gap: 1.4rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .vip-copy {
+      display: grid;
+      justify-items: center;
+      gap: 0.9rem;
+    }
+
+    .vip-kicker {
+      display: inline-block;
+      color: #f0d6ff;
+      font-family: "Cinzel", serif;
+      font-size: 0.74rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      margin-top: 0.15rem;
+    }
+
+    .vip-title {
+      margin: 0;
+      font-family: "Cinzel Decorative", serif;
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      line-height: 0.92;
+      color: #fff3ff;
+      max-width: none;
+      text-align: center;
+      letter-spacing: 0.03em;
+      text-shadow:
+        0 0 18px rgba(255, 238, 255, 0.24),
+        0 0 52px rgba(186, 118, 255, 0.28),
+        0 12px 26px rgba(0, 0, 0, 0.24);
+    }
+
+    .vip-copy p {
+      margin: 0;
+      max-width: 44rem;
+      color: var(--mist);
+      font-size: 1.03rem;
+      line-height: 1.7;
+      text-wrap: balance;
+    }
+
+    .vip-divider {
+      width: min(100%, 14rem);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(241, 219, 255, 0.8), transparent);
+      opacity: 0.9;
+    }
+
+    .vip-blurb-box {
+      width: min(100%, 38rem);
+      padding: 1.05rem 1.15rem;
+      border-radius: 1.3rem;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.035) 22%, rgba(0, 0, 0, 0.1)),
+        rgba(18, 10, 30, 0.48);
+      border: 1px solid rgba(233, 214, 255, 0.12);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        inset 0 -16px 24px rgba(0, 0, 0, 0.14),
+        0 20px 34px rgba(0, 0, 0, 0.2),
+        0 0 30px rgba(167, 95, 244, 0.12);
+      backdrop-filter: blur(14px) saturate(1.06);
+      -webkit-backdrop-filter: blur(14px) saturate(1.06);
+    }
+
+    .vip-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.2rem;
+    }
+
+    .vip-card {
+      --tier-glow: rgba(186, 110, 255, 0.2);
+      --tier-edge: rgba(226, 190, 255, 0.14);
+      --tier-ink: #fff0ff;
+      --tier-soft: #f0d6ff;
+      --tier-chip: rgba(255, 255, 255, 0.04);
+      --tier-chip-border: rgba(241, 218, 255, 0.18);
+      --tier-price-top: rgba(234, 198, 255, 0.18);
+      --tier-price-bottom: rgba(98, 47, 138, 0.24);
+      --tier-rose-core: #8c3dbd;
+      --tier-rose-shadow: rgba(56, 20, 76, 0.38);
+      --tier-glass-top: rgba(255, 255, 255, 0.14);
+      --tier-glass-mid: rgba(255, 255, 255, 0.04);
+      --tier-glass-bottom: rgba(6, 2, 12, 0.18);
+      --tier-panel: rgba(15, 8, 24, 0.56);
+      --tier-sheen: rgba(255, 255, 255, 0.2);
+      position: relative;
+      padding: 1.55rem 1.55rem 1.45rem;
+      border-radius: 1.6rem;
+      background:
+        linear-gradient(180deg, var(--tier-glass-top), var(--tier-glass-mid) 24%, rgba(255, 255, 255, 0.015) 42%, var(--tier-glass-bottom) 100%),
+        linear-gradient(180deg, color-mix(in srgb, var(--tier-rose-core) 14%, transparent), transparent 38%),
+        var(--tier-panel);
+      border: 1px solid var(--tier-edge);
+      box-shadow:
+        0 24px 46px rgba(0, 0, 0, 0.3),
+        0 0 40px var(--tier-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        inset 0 -22px 38px rgba(0, 0, 0, 0.26),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(18px) saturate(1.08);
+      -webkit-backdrop-filter: blur(18px) saturate(1.08);
+      overflow: hidden;
+    }
+
+    .vip-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 10%, var(--tier-sheen), transparent 18%),
+        radial-gradient(circle at 80% 0%, color-mix(in srgb, var(--tier-soft) 16%, transparent), transparent 24%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05) 18%, transparent 38%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.05), transparent 30%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 36%, rgba(0, 0, 0, 0.12));
+      opacity: 0.92;
+      pointer-events: none;
+    }
+
+    .vip-card::after {
+      content: "";
+      position: absolute;
+      inset: 0.7rem;
+      border-radius: 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.22),
+        0 0 18px color-mix(in srgb, var(--tier-glow) 60%, transparent);
+      pointer-events: none;
+    }
+
+    .vip-card.featured {
+      transform: translateY(-0.45rem);
+      border-color: color-mix(in srgb, var(--tier-soft) 44%, transparent);
+      box-shadow:
+        0 30px 60px rgba(0, 0, 0, 0.34),
+        0 0 56px var(--tier-glow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        inset 0 -22px 38px rgba(0, 0, 0, 0.24),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .vip-card-header,
+    .vip-list,
+    .vip-footnote {
+      position: relative;
+      z-index: 1;
+    }
+
+    .vip-card-header {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .vip-tier-art {
+      --art-scale: 1;
+      --art-x: 50%;
+      --art-y: 56%;
+      position: relative;
+      margin: 0.15rem 0 0.35rem;
+      padding: 0.5rem;
+      border-radius: 1.3rem;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.14), transparent 32%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02) 22%, rgba(0, 0, 0, 0.16)),
+        rgba(8, 4, 14, 0.34);
+      border: 1px solid color-mix(in srgb, var(--tier-soft) 18%, rgba(255, 255, 255, 0.06));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 -12px 22px rgba(0, 0, 0, 0.18),
+        0 16px 30px rgba(0, 0, 0, 0.22),
+        0 0 18px color-mix(in srgb, var(--tier-glow) 70%, transparent);
+      overflow: hidden;
+    }
+
+    .vip-tier-art::before {
+      content: "";
+      position: absolute;
+      inset: 0.38rem;
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      pointer-events: none;
+    }
+
+    .vip-tier-art img {
+      display: block;
+      width: 100%;
+      height: 15.75rem;
+      object-fit: contain;
+      object-position: var(--art-x) var(--art-y);
+      border-radius: 0.95rem;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.08), transparent 28%),
+        linear-gradient(180deg, rgba(12, 5, 20, 0.3), rgba(0, 0, 0, 0));
+      box-shadow:
+        0 12px 24px rgba(0, 0, 0, 0.22),
+        0 0 24px var(--tier-glow);
+      transform: scale(var(--art-scale));
+      transform-origin: center;
+    }
+
+    .vip-topline {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 0.65rem;
+      min-height: 0;
+    }
+
+    .vip-card h3 {
+      margin: 0;
+      font-family: "Cinzel Decorative", serif;
+      font-size: 1.9rem;
+      line-height: 1.05;
+      color: var(--tier-ink);
+    }
+
+    .vip-quote {
+      margin: 0;
+      color: #ebd7f8;
+      font-size: 0.98rem;
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    .vip-price {
+      display: inline-block;
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--tier-price-top), var(--tier-price-bottom));
+      border: 1px solid var(--tier-chip-border);
+      color: #fff6ff;
+      font-family: "Cinzel", serif;
+      font-size: 0.86rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .vip-list {
+      margin: 1.25rem 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.72rem;
+    }
+
+    .vip-list li {
+      position: relative;
+      padding: 0.78rem 0 0 1.25rem;
+      color: var(--mist);
+      font-size: 1rem;
+      line-height: 1.45;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .vip-list li::before {
+      content: "";
+      position: absolute;
+      left: 0.05rem;
+      top: 1.12rem;
+      width: 0.42rem;
+      height: 0.42rem;
+      rotate: 45deg;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--tier-soft) 88%, white 12%), color-mix(in srgb, var(--tier-rose-core) 72%, black 28%));
+      border-radius: 0.08rem;
+      box-shadow: 0 0 10px var(--tier-glow);
+    }
+
+    .vip-footnote {
+      margin-top: 1.2rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(241, 218, 255, 0.1);
+      color: rgba(231, 216, 243, 0.86);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .vip-card.sin-bloom {
+      --tier-glow: rgba(243, 126, 174, 0.28);
+      --tier-edge: rgba(255, 196, 224, 0.18);
+      --tier-ink: #fff0f6;
+      --tier-soft: #ffd6e7;
+      --tier-chip: rgba(255, 215, 233, 0.06);
+      --tier-chip-border: rgba(255, 205, 229, 0.22);
+      --tier-price-top: rgba(255, 201, 226, 0.22);
+      --tier-price-bottom: rgba(135, 38, 92, 0.24);
+      --tier-rose-core: #d6528a;
+      --tier-rose-shadow: rgba(71, 18, 47, 0.42);
+      --tier-glass-top: rgba(255, 218, 236, 0.16);
+      --tier-glass-mid: rgba(255, 197, 225, 0.05);
+      --tier-glass-bottom: rgba(20, 4, 10, 0.16);
+      --tier-panel: rgba(47, 12, 28, 0.52);
+      --tier-sheen: rgba(255, 218, 236, 0.22);
+    }
+
+    .vip-card.sin-bloom .vip-tier-art {
+      --art-scale: 1.08;
+      --art-y: 56%;
+    }
+
+    .vip-card.sovereign-thorn {
+      --tier-glow: rgba(184, 124, 255, 0.3);
+      --tier-edge: rgba(221, 194, 255, 0.2);
+      --tier-ink: #fbf2ff;
+      --tier-soft: #eedcff;
+      --tier-chip: rgba(233, 214, 255, 0.06);
+      --tier-chip-border: rgba(233, 214, 255, 0.22);
+      --tier-price-top: rgba(223, 196, 255, 0.22);
+      --tier-price-bottom: rgba(91, 44, 145, 0.26);
+      --tier-rose-core: #9e59dc;
+      --tier-rose-shadow: rgba(53, 22, 80, 0.4);
+      --tier-glass-top: rgba(228, 214, 255, 0.16);
+      --tier-glass-mid: rgba(204, 178, 255, 0.05);
+      --tier-glass-bottom: rgba(12, 4, 24, 0.18);
+      --tier-panel: rgba(27, 11, 48, 0.5);
+      --tier-sheen: rgba(233, 214, 255, 0.22);
+    }
+
+    .vip-card.sovereign-thorn .vip-tier-art {
+      --art-scale: 1.1;
+      --art-y: 53%;
+    }
+
+    .vip-card.crowned-rose {
+      --tier-glow: rgba(233, 200, 113, 0.3);
+      --tier-edge: rgba(248, 222, 154, 0.22);
+      --tier-ink: #fff7e6;
+      --tier-soft: #f6e3b3;
+      --tier-chip: rgba(247, 227, 183, 0.06);
+      --tier-chip-border: rgba(248, 227, 174, 0.24);
+      --tier-price-top: rgba(246, 224, 171, 0.22);
+      --tier-price-bottom: rgba(124, 85, 28, 0.26);
+      --tier-rose-core: #d4a53d;
+      --tier-rose-shadow: rgba(82, 55, 14, 0.4);
+      --tier-glass-top: rgba(249, 232, 188, 0.16);
+      --tier-glass-mid: rgba(246, 224, 171, 0.05);
+      --tier-glass-bottom: rgba(24, 13, 4, 0.18);
+      --tier-panel: rgba(55, 35, 12, 0.5);
+      --tier-sheen: rgba(248, 227, 174, 0.22);
+    }
+
+    .vip-card.crowned-rose .vip-tier-art {
+      --art-scale: 1.1;
+      --art-y: 52%;
+    }
+
+    body.vip-page main.page {
+      padding-top: 1.6rem;
+      padding-bottom: 4rem;
+    }
+
+    body.vip-page .vip-section {
+      margin: 0;
+      padding: 2rem 2.4rem 2.1rem;
+    }
+
+    body.vip-page .vip-header {
+      gap: 0.75rem;
+      margin-bottom: 1.45rem;
+      justify-items: center;
+      text-align: center;
+    }
+
+    body.vip-page .vip-title {
+      font-size: clamp(1.75rem, 2.4vw, 2.4rem);
+      max-width: none;
+      line-height: 1.02;
+      letter-spacing: 0.01em;
+    }
+
+    body.vip-page .vip-copy p {
+      max-width: 34rem;
+      font-size: 0.92rem;
+      line-height: 1.58;
+      color: rgba(231, 216, 243, 0.92);
+    }
+
+    body.vip-page .vip-copy {
+      justify-items: center;
+      max-width: 34rem;
+      gap: 0.58rem;
+    }
+
+    body.vip-page .vip-divider {
+      width: 5rem;
+    }
+
+    body.vip-page .vip-blurb-box {
+      width: min(100%, 34rem);
+    }
+
+    .court-section {
+      position: relative;
+      content-visibility: auto;
+      contain-intrinsic-size: 1400px;
+      margin: 0;
+      padding: 2.2rem;
+      border-radius: 2rem;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(214, 154, 255, 0.14), transparent 22%),
+        linear-gradient(180deg, rgba(37, 15, 54, 0.96), rgba(10, 4, 18, 0.98));
+      border: 1px solid rgba(221, 190, 255, 0.18);
+      box-shadow:
+        0 36px 90px rgba(0, 0, 0, 0.4),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 0 44px rgba(141, 86, 207, 0.16);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .court-section::before,
+    .court-section::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .court-section::before {
+      inset: 0;
+      background:
+        radial-gradient(circle at 14% 18%, rgba(255, 255, 255, 0.04), transparent 18%),
+        radial-gradient(circle at 84% 16%, rgba(212, 164, 255, 0.12), transparent 18%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.04), transparent 24%);
+      opacity: 0.92;
+    }
+
+    .court-section::after {
+      inset: 1rem;
+      border-radius: 1.45rem;
+      border: 1px solid rgba(221, 190, 255, 0.08);
+    }
+
+    .court-header {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      justify-items: center;
+      text-align: center;
+      gap: 0.75rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .court-kicker {
+      color: #f0d6ff;
+      font-family: "Cinzel", serif;
+      font-size: 0.74rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .court-title {
+      margin: 0;
+      font-family: "Cinzel Decorative", serif;
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      line-height: 0.94;
+      letter-spacing: 0.04em;
+      color: #fff4ff;
+      text-shadow:
+        0 0 20px rgba(255, 238, 255, 0.18),
+        0 0 46px rgba(174, 108, 255, 0.2),
+        0 10px 24px rgba(0, 0, 0, 0.24);
+    }
+
+    .court-divider {
+      width: 5.8rem;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(241, 219, 255, 0.84), transparent);
+      opacity: 0.9;
+    }
+
+    .court-blurb {
+      width: min(100%, 42rem);
+      padding: 1rem 1.2rem;
+      border-radius: 1.25rem;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.03) 24%, rgba(0, 0, 0, 0.1)),
+        rgba(18, 10, 30, 0.42);
+      border: 1px solid rgba(233, 214, 255, 0.12);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        inset 0 -16px 24px rgba(0, 0, 0, 0.14),
+        0 18px 30px rgba(0, 0, 0, 0.18),
+        0 0 22px rgba(167, 95, 244, 0.08);
+      backdrop-filter: blur(14px) saturate(1.06);
+      -webkit-backdrop-filter: blur(14px) saturate(1.06);
+    }
+
+    .court-blurb p {
+      margin: 0;
+      color: rgba(231, 216, 243, 0.92);
+      font-size: 0.98rem;
+      line-height: 1.65;
+    }
+
+    .court-roster {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 1.45rem;
+      margin-top: 2rem;
+    }
+
+    .court-roster-panel {
+      --panel-accent: rgba(173, 110, 238, 0.18);
+      position: relative;
+      padding: 1.45rem;
+      border-radius: 1.8rem;
+      background:
+        radial-gradient(circle at 16% 16%, rgba(255, 255, 255, 0.14), transparent 16%),
+        radial-gradient(circle at 86% 12%, color-mix(in srgb, var(--panel-accent) 52%, white 14%), transparent 22%),
+        linear-gradient(140deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04) 18%, rgba(255, 255, 255, 0.015) 32%, transparent 48%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04) 20%, rgba(0, 0, 0, 0.18)),
+        linear-gradient(180deg, color-mix(in srgb, var(--panel-accent) 82%, transparent), transparent 46%),
+        rgba(18, 10, 30, 0.38);
+      border: 1px solid color-mix(in srgb, var(--panel-accent) 30%, rgba(255, 245, 255, 0.2));
+      box-shadow:
+        0 24px 56px rgba(0, 0, 0, 0.24),
+        0 0 22px color-mix(in srgb, var(--panel-accent) 86%, transparent),
+        0 0 54px color-mix(in srgb, var(--panel-accent) 42%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        inset 0 -22px 34px rgba(0, 0, 0, 0.16);
+      overflow: hidden;
+      isolation: isolate;
+      backdrop-filter: blur(22px) saturate(1.1);
+      -webkit-backdrop-filter: blur(22px) saturate(1.1);
+    }
+
+    .court-roster-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0.8rem;
+      border-radius: 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 0 18px color-mix(in srgb, var(--panel-accent) 34%, transparent);
+      pointer-events: none;
+    }
+
+    .court-roster-panel.imperium-panel { --panel-accent: rgba(193, 112, 210, 0.2); }
+    .court-roster-panel.thornlit-panel { --panel-accent: rgba(184, 72, 90, 0.2); }
+    .court-roster-panel.roselights-panel { --panel-accent: rgba(221, 184, 112, 0.2); }
+
+    .court-panel-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 1rem;
+      align-items: end;
+      margin-bottom: 1.25rem;
+    }
+
+    .court-panel-kicker {
+      display: inline-block;
+      margin-bottom: 0.35rem;
+      color: rgba(240, 222, 250, 0.82);
+      font-family: "Cinzel", serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .court-panel-title {
+      margin: 0;
+      color: #fff2ff;
+      font-family: "Cinzel Decorative", serif;
+      font-size: clamp(1.6rem, 3vw, 2.45rem);
+      line-height: 0.94;
+      text-shadow:
+        0 0 16px rgba(255, 235, 255, 0.16),
+        0 10px 22px rgba(0, 0, 0, 0.2);
+    }
+
+    .court-panel-copy {
+      width: min(100%, 46rem);
+      margin: 0.55rem 0 0;
+      color: rgba(231, 216, 243, 0.9);
+      font-size: 0.98rem;
+      line-height: 1.65;
+    }
+
+    .court-panel-pill {
+      justify-self: end;
+      align-self: start;
+      padding: 0.72rem 1rem;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--panel-accent) 34%, rgba(245, 226, 255, 0.18));
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04)),
+        color-mix(in srgb, var(--panel-accent) 42%, rgba(24, 12, 36, 0.68));
+      color: #fff1fb;
+      font-family: "Cinzel", serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        0 0 16px color-mix(in srgb, var(--panel-accent) 90%, transparent),
+        0 0 28px color-mix(in srgb, var(--panel-accent) 42%, transparent);
+    }
+
+    .court-empty-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.15rem;
+    }
+
+    .court-empty-card {
+      position: relative;
+      min-height: 14.5rem;
+      padding: 1.15rem;
+      border-radius: 1.45rem;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      text-align: center;
+      gap: 0.8rem;
+      background:
+        radial-gradient(circle at 18% 16%, rgba(255, 255, 255, 0.12), transparent 18%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02) 22%, transparent 44%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.025) 20%, rgba(0, 0, 0, 0.12)),
+        color-mix(in srgb, var(--panel-accent) 22%, rgba(11, 5, 18, 0.66));
+      border: 1px solid color-mix(in srgb, var(--panel-accent) 26%, rgba(245, 226, 255, 0.12));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 18px 34px rgba(0, 0, 0, 0.16),
+        0 0 24px color-mix(in srgb, var(--panel-accent) 38%, transparent);
+      overflow: hidden;
+      backdrop-filter: blur(18px) saturate(1.08);
+      -webkit-backdrop-filter: blur(18px) saturate(1.08);
+    }
+
+    .court-empty-card::before {
+      content: "";
+      position: absolute;
+      inset: 0.7rem;
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+    }
+
+    .court-empty-art {
+      width: min(100%, 7rem);
+      aspect-ratio: 1;
+      padding: 0.85rem;
+      border-radius: 1.4rem;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 18%, color-mix(in srgb, var(--panel-accent) 62%, white 18%), transparent 42%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02) 28%, rgba(0, 0, 0, 0.14)),
+        rgba(10, 4, 16, 0.48);
+      border: 1px solid rgba(245, 226, 255, 0.1);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 0 22px color-mix(in srgb, var(--panel-accent) 64%, transparent);
+    }
+
+    .court-empty-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0.92;
+      filter: drop-shadow(0 0 16px color-mix(in srgb, var(--panel-accent) 72%, transparent));
+    }
+
+    .court-empty-card h4 {
+      margin: 0;
+      color: #fff2ff;
+      font-family: "Cinzel Decorative", serif;
+      font-size: 1.35rem;
+    }
+
+    .court-empty-card p {
+      margin: 0;
+      color: rgba(231, 216, 243, 0.86);
+      font-size: 0.94rem;
+      line-height: 1.6;
+      max-width: 24rem;
+    }
+
+    .court-subhead {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      margin: 0 0 1.2rem;
+      color: #f6e5ff;
+      font-family: "Cinzel", serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .court-subhead::before,
+    .court-subhead::after {
+      content: "";
+      height: 1px;
+      flex: 1 1 auto;
+      background: linear-gradient(90deg, transparent, rgba(241, 219, 255, 0.48), transparent);
+    }
+
+    .imperium-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.2rem;
+    }
+
+    .imperium-card {
+      --court-accent: rgba(179, 115, 255, 0.18);
+      position: relative;
+      display: grid;
+      grid-template-columns: 10.4rem minmax(0, 1fr);
+      gap: 1.15rem;
+      padding: 1.2rem;
+      border-radius: 1.7rem;
+      background:
+        radial-gradient(circle at 16% 14%, rgba(255, 255, 255, 0.14), transparent 18%),
+        radial-gradient(circle at 88% 10%, color-mix(in srgb, var(--court-accent) 48%, white 12%), transparent 22%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04) 18%, transparent 42%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04) 22%, rgba(0, 0, 0, 0.12)),
+        linear-gradient(180deg, color-mix(in srgb, var(--court-accent) 76%, transparent), transparent 42%),
+        rgba(18, 10, 30, 0.36);
+      border: 1px solid color-mix(in srgb, var(--court-accent) 28%, rgba(233, 214, 255, 0.18));
+      box-shadow:
+        0 24px 42px rgba(0, 0, 0, 0.22),
+        0 0 22px color-mix(in srgb, var(--court-accent) 88%, transparent),
+        0 0 40px color-mix(in srgb, var(--court-accent) 42%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        inset 0 -20px 30px rgba(0, 0, 0, 0.14);
+      backdrop-filter: blur(16px) saturate(1.04);
+      -webkit-backdrop-filter: blur(16px) saturate(1.04);
+      overflow: hidden;
+      transition:
+        transform 220ms ease,
+        box-shadow 220ms ease,
+        border-color 220ms ease;
+    }
+
+    .imperium-card::before {
+      content: "";
+      position: absolute;
+      inset: 0.7rem;
+      border-radius: 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 0 18px color-mix(in srgb, var(--court-accent) 30%, transparent);
+      pointer-events: none;
+    }
+
+    .imperium-card:hover {
+      transform: translateY(-0.3rem);
+      border-color: color-mix(in srgb, var(--court-accent) 34%, rgba(245, 226, 255, 0.2));
+      box-shadow:
+        0 30px 48px rgba(0, 0, 0, 0.28),
+        0 0 28px color-mix(in srgb, var(--court-accent) 98%, transparent),
+        0 0 52px color-mix(in srgb, var(--court-accent) 50%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    .imperium-card.thornheart { --court-accent: rgba(214, 94, 154, 0.2); }
+    .imperium-card.bleeding-heart { --court-accent: rgba(177, 78, 88, 0.2); }
+    .imperium-card.divine-vessel { --court-accent: rgba(214, 214, 224, 0.18); }
+    .imperium-card.soul-collector { --court-accent: rgba(146, 92, 199, 0.2); }
+    .imperium-card.pup-bloom { --court-accent: rgba(196, 104, 163, 0.22); }
+    .imperium-card.sinner-mark { --court-accent: rgba(126, 77, 168, 0.22); }
+    .imperium-card.dragon-thorn { --court-accent: rgba(174, 79, 92, 0.22); }
+    .imperium-card.primal-ember { --court-accent: rgba(112, 132, 215, 0.22); }
+    .imperium-card.many-shapes { --court-accent: rgba(204, 142, 210, 0.22); }
+    .imperium-card.gremlin-child { --court-accent: rgba(226, 176, 96, 0.22); }
+    .imperium-card.ashryver-voss { --court-accent: rgba(138, 120, 207, 0.22); }
+
+    .imperium-portrait {
+      position: relative;
+      width: min(100%, 10.4rem);
+      justify-self: center;
+      align-self: start;
+      border-radius: 1.35rem;
+      padding: 0.6rem;
+      background:
+        radial-gradient(circle at 50% 14%, color-mix(in srgb, var(--court-accent) 70%, white 30%), transparent 32%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02) 22%, rgba(0, 0, 0, 0.16)),
+        rgba(8, 4, 14, 0.34);
+      border: 1px solid rgba(241, 218, 255, 0.1);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 -12px 22px rgba(0, 0, 0, 0.18),
+        0 16px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .imperium-portrait::before {
+      content: "";
+      position: absolute;
+      inset: 0.45rem;
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      pointer-events: none;
+    }
+
+    .imperium-portrait img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      height: auto;
+      object-fit: cover;
+      object-position: center 18%;
+      border-radius: 1rem;
+    }
+
+    .imperium-card.dragon-thorn .imperium-portrait img {
+      object-position: center top;
+    }
+
+    .imperium-card.many-shapes .imperium-portrait img {
+      object-fit: contain;
+      object-position: center;
+      transform: rotate(90deg) scale(1.28);
+    }
+
+    .imperium-copy {
+      min-width: 0;
+      display: grid;
+      align-content: start;
+    }
+
+    .imperium-name {
+      margin: 0;
+      font-family: "Cinzel Decorative", serif;
+      font-size: 1.6rem;
+      line-height: 1.02;
+      color: #fff3ff;
+      text-shadow:
+        0 0 16px rgba(255, 234, 255, 0.12),
+        0 8px 20px rgba(0, 0, 0, 0.22);
+    }
+
+    .imperium-title {
+      margin: 0.45rem 0 0.9rem;
+      color: rgba(240, 222, 250, 0.88);
+      font-family: "Cinzel", serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .imperium-list {
+      display: grid;
+      gap: 0.62rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .imperium-list li {
+      display: grid;
+      gap: 0.18rem;
+      padding: 0.68rem 0.8rem 0.72rem;
+      border-radius: 0.95rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+        color-mix(in srgb, var(--court-accent) 22%, rgba(8, 4, 14, 0.56));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 10px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .imperium-list strong {
+      color: #fff2ff;
+      font-family: "Cinzel", serif;
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .imperium-list span {
+      color: rgba(231, 216, 243, 0.9);
+      font-size: 0.96rem;
+      line-height: 1.5;
+    }
+
+    body.court-page main.page {
+      padding-top: 1.6rem;
+      padding-bottom: 4rem;
+    }
+
+    footer {
+      padding: 1rem 0 4rem;
+      text-align: center;
+      color: rgba(222, 212, 215, 0.76);
+      font-family: "Cinzel", serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    @keyframes gate-left-open {
+      from { transform: translateX(0); }
+      to { transform: translateX(-102%); }
+    }
+
+    @keyframes gate-right-open {
+      from { transform: translateX(0); }
+      to { transform: translateX(102%); }
+    }
+
+    @keyframes gates-fade {
+      0%, 78% { opacity: 1; }
+      100% { opacity: 0; visibility: hidden; }
+    }
+
+    @keyframes center-glow {
+      0% { opacity: 0; }
+      30% { opacity: 0.9; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes fog-rise {
+      from {
+        opacity: 0;
+        transform: translateY(3rem);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fog-drift-a {
+      0%, 100% { transform: translateX(-2%) translateY(0); }
+      50% { transform: translateX(4%) translateY(-1rem); }
+    }
+
+    @keyframes fog-drift-b {
+      0%, 100% { transform: translateX(3%) translateY(0); }
+      50% { transform: translateX(-4%) translateY(-0.7rem); }
+    }
+
+    @keyframes petal-fall {
+      0% { transform: translate3d(0, -18vh, 0) rotate(0deg); }
+      20% { transform: translate3d(calc(var(--drift) * 0.18), 14vh, 0) rotate(52deg); }
+      45% { transform: translate3d(calc(var(--drift) * 0.52), 46vh, 0) rotate(138deg); }
+      75% { transform: translate3d(calc(var(--drift) * 0.82), 82vh, 0) rotate(228deg); }
+      100% { transform: translate3d(var(--drift), 122vh, 0) rotate(318deg); }
+    }
+
+    @keyframes petal-sway {
+      0%, 100% { margin-left: 0; }
+      50% { margin-left: 10px; }
+    }
+
+    @keyframes petal-spin {
+      from { filter: blur(0.12px); }
+      50% { filter: blur(0.24px); }
+      to { filter: blur(0.12px); }
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .section-grid,
+      .vip-header,
+      .vip-grid,
+      .imperium-grid,
+      .court-empty-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-copy {
+        font-size: clamp(1.8rem, 9vw, 3rem);
+      }
+
+      nav {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        justify-content: center;
+      }
+
+      nav a {
+        min-width: 0;
+      }
+
+      .feature-panel {
+        min-height: 31rem;
+      }
+
+      .vip-card.featured {
+        transform: none;
+      }
+
+      .court-section {
+        padding: 1.55rem;
+      }
+
+      .court-blurb {
+        width: 100%;
+      }
+
+      .court-panel-head {
+        grid-template-columns: 1fr;
+      }
+
+      .court-panel-pill {
+        justify-self: start;
+      }
+
+      .imperium-card {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .brand {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .vip-topline {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        width: min(100% - 1rem, 1180px);
+      }
+
+      header {
+        padding-top: 0.7rem;
+      }
+
+      .brand {
+        padding: 1rem;
+      }
+
+      .bio-card,
+      .section-card,
+      .mini-panel,
+      .vip-section,
+      .vip-card,
+      .court-section,
+      .imperium-card {
+        padding: 1rem;
+      }
+
+      .center-oval {
+        inset: 3rem 2.8rem;
+      }
+
+      .enter-rose {
+        width: 7rem;
+      }
+
+      nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      nav a {
+        min-height: 2.8rem;
+        min-width: 0;
+        padding: 0.72rem 0.9rem;
+        font-size: 0.8rem;
+      }
+
+      .brand-logo {
+        width: 5.8rem;
+        height: 5.8rem;
+      }
+
+      .bio-card p {
+        font-size: 1rem;
+      }
+
+      .court-title {
+        font-size: clamp(1.9rem, 11vw, 2.7rem);
+      }
+
+      .court-blurb {
+        padding: 0.95rem 1rem;
+      }
+
+      .court-blurb p {
+        font-size: 0.93rem;
+      }
+
+      .court-roster-panel {
+        padding: 1.05rem;
+      }
+
+      .court-panel-copy {
+        font-size: 0.93rem;
+      }
+
+      .court-empty-card {
+        min-height: 12.5rem;
+      }
+
+      .court-subhead {
+        gap: 0.55rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+      }
+
+      .imperium-card {
+        gap: 0.9rem;
+      }
+
+      .imperium-portrait {
+        padding: 0.5rem;
+      }
+
+      .imperium-name {
+        font-size: 1.34rem;
+      }
+
+      .imperium-title {
+        margin-bottom: 0.75rem;
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+      }
+
+      .imperium-list li {
+        padding: 0.62rem 0.72rem 0.68rem;
+      }
+
+      .imperium-list span {
+        font-size: 0.92rem;
+      }
+
+      .vip-title {
+        font-size: 2.2rem;
+      }
+
+      body.vip-page .page {
+        width: min(100% - 1rem, 1240px);
+      }
+
+      body.vip-page .vip-section {
+        padding: 1.75rem 1rem 1.2rem;
+      }
+
+      body.vip-page .vip-title {
+        font-size: 1.65rem;
+        max-width: 14ch;
+      }
+
+      body.vip-page .vip-header,
+      body.vip-page .vip-copy {
+        justify-items: center;
+        text-align: center;
+      }
+
+      body.vip-page nav a {
+        min-width: 0;
+      }
+
+      .vip-topline {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .vip-tier-art img {
+        height: 12.25rem;
+      }
+    }
+
+    @media (max-width: 900px), (prefers-reduced-motion: reduce) {
+      .fog-layer,
+      .petal-fall {
+        display: none;
+      }
+
+      body::before {
+        filter: blur(10px);
+        opacity: 0.24;
+      }
+
+      body::after {
+        opacity: 0.46;
+      }
+    }
+  </style>
+</head>
+<body class="court-page">
+  <div class="petal-fall" aria-hidden="true" id="petal-fall"></div>
+  <div class="fog-layer" aria-hidden="true">
+    <div class="fog one"></div>
+    <div class="fog two"></div>
+  </div>
+
+  <header>
+    <div class="page nav">
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="images/logo2.png" alt="Eden logo" />
+        <div class="brand-copy">
+          Eden
+          <span>Where Beauty And Darkness Bloom</span>
+          <span class="brand-location">Dyna Maduin Empy W3 P12</span>
+        </div>
+      </a>
+      <nav aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="vip.html">VIP</a>
+        <a href="rosecourt.html">The Rose Court</a>
+        <a href="https://discord.gg/pK4U9FqsNj" target="_blank" rel="noreferrer">Discord</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="court-section" id="court">
+      <div class="court-header">
+        <span class="court-kicker">Eden Staff Directory</span>
+        <h2 class="court-title">The Rose Court</h2>
+        <div class="court-divider" aria-hidden="true"></div>
+        <div class="court-blurb">
+          <p>
+            The Rose Court is divided into three distinct houses: Imperium, Thornlit, and Roselights. Each branch carries its own atmosphere, role, and presence inside Eden, from the ruling heart of the venue to the roses who shape its softer glow.
+          </p>
+        </div>
+      </div>
+
+      <div class="court-roster">
+        <section class="court-roster-panel imperium-panel">
+          <div class="court-panel-head">
+            <div>
+              <span class="court-panel-kicker">Inner Circle</span>
+              <h3 class="court-panel-title">Imperium</h3>
+              <p class="court-panel-copy">
+                The Imperium stands at the center of Eden's court: the founders, keepers, and guiding hands who shape the venue's tone, direction, and identity night after night.
+              </p>
+            </div>
+          </div>
+
+          <div class="court-subhead">Imperium Roster</div>
+
+          <div class="imperium-grid">
+            <article class="imperium-card thornheart">
+              <div class="imperium-portrait">
+                <img src="images/NyxiCinnabelle.png" alt="Nyxi Cinnabelle portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h3 class="imperium-name">Nyxi Cinnabelle</h3>
+                <div class="imperium-title">The Thornheart</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Feol-Viera</span></li>
+                  <li><strong>Age</strong><span>A lady never tells her age.</span></li>
+                  <li><strong>Gender</strong><span>Female</span></li>
+                  <li><strong>Pronouns</strong><span>She/Her/Gremlin</span></li>
+                  <li><strong>Staff Position</strong><span>Owner</span></li>
+                  <li><strong>Orientation</strong><span>Straight, Demisexual</span></li>
+                  <li><strong>Relationship Status</strong><span>N/A</span></li>
+                  <li><strong>Roleplay</strong><span>NSFW only. Para, mirror, dark, and third person.</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card bleeding-heart">
+              <div class="imperium-portrait">
+                <img src="images/CortNonori.png" alt="Cort Nonori portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h3 class="imperium-name">Cort Nonori</h3>
+                <div class="imperium-title">The Bleeding Heart</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Elezen, Duskwight Vampire</span></li>
+                  <li><strong>Age</strong><span>His age is never-ending.</span></li>
+                  <li><strong>Gender</strong><span>Male</span></li>
+                  <li><strong>Pronouns</strong><span>He/Him</span></li>
+                  <li><strong>Staff Position</strong><span>Co-Owner and Bartender</span></li>
+                  <li><strong>Orientation</strong><span>Straight</span></li>
+                  <li><strong>Relationship Status</strong><span>N/A</span></li>
+                  <li><strong>Roleplay</strong><span>SFW and NSFW welcome.</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card divine-vessel">
+              <div class="imperium-portrait">
+                <img src="images/WeissKatze.png" alt="Weiss Katze portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h3 class="imperium-name">Weiss Katze</h3>
+                <div class="imperium-title">Divine Vessel</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Albino Miqo'te, mix-blood</span></li>
+                  <li><strong>Age</strong><span>24</span></li>
+                  <li><strong>Gender</strong><span>Female</span></li>
+                  <li><strong>Pronouns</strong><span>She/Her</span></li>
+                  <li><strong>Staff Position</strong><span>Manager, Gposer, MC, wearer of all hats</span></li>
+                  <li><strong>Orientation</strong><span>Pansexual</span></li>
+                  <li><strong>Relationship Status</strong><span>Owned</span></li>
+                  <li><strong>Roleplay</strong><span>Both SFW and NSFW are welcome.</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card soul-collector">
+              <div class="imperium-portrait">
+                <img src="images/ElviraFeronia.png" alt="Elvira Feronia portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h3 class="imperium-name">Elvira Feronia</h3>
+                <div class="imperium-title">Soul Collector</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Shapeshifting Succubus</span></li>
+                  <li><strong>Age</strong><span>Unknown</span></li>
+                  <li><strong>Gender</strong><span>Female</span></li>
+                  <li><strong>Pronouns</strong><span>She/Her</span></li>
+                  <li><strong>Staff Position</strong><span>Manager, SFW dancer, occasional Gposer</span></li>
+                  <li><strong>Orientation</strong><span>Bi, Demisexual</span></li>
+                  <li><strong>Relationship Status</strong><span>Single</span></li>
+                  <li><strong>Roleplay</strong><span>No RP.</span></li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="court-roster-panel thornlit-panel">
+          <div class="court-panel-head">
+            <div>
+              <span class="court-panel-kicker">After Dark</span>
+              <h3 class="court-panel-title">Thornlit</h3>
+              <p class="court-panel-copy">
+                Thornlit holds the sharper, more tempting edge of the court: roses with bite, darker allure, and a presence meant to leave a mark long after the night is over.
+              </p>
+            </div>
+          </div>
+
+          <div class="court-subhead">Thornlit Roster</div>
+
+          <div class="imperium-grid">
+            <article class="imperium-card pup-bloom">
+              <div class="imperium-portrait">
+                <img src="images/MarikoGriehaneux.png" alt="Mariko Griehaneux portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Mariko Griehaneux</h4>
+                <div class="imperium-title">Pup</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Half Lupin / Half Hyur hybrid</span></li>
+                  <li><strong>Age</strong><span>26</span></li>
+                  <li><strong>Gender</strong><span>Female</span></li>
+                  <li><strong>Pronouns</strong><span>She/They</span></li>
+                  <li><strong>Staff Position</strong><span>Courtesan</span></li>
+                  <li><strong>Orientation</strong><span>Pansexual, femme-leaning</span></li>
+                  <li><strong>Relationship Status</strong><span>Poly</span></li>
+                  <li><strong>Roleplay</strong><span>NSFW / SFW</span></li>
+                  <li><strong>Alignment / Dynamics</strong><span>Submissive</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card sinner-mark">
+              <div class="imperium-portrait">
+                <img src="images/KuraiHoshizora.png" alt="Kurai Hoshizora portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Kurai Hoshizora</h4>
+                <div class="imperium-title">Sinner</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Viera</span></li>
+                  <li><strong>Age</strong><span>Undefined</span></li>
+                  <li><strong>Gender</strong><span>Male</span></li>
+                  <li><strong>Pronouns</strong><span>He/Him</span></li>
+                  <li><strong>Orientation</strong><span>Find out</span></li>
+                  <li><strong>Relationship Status</strong><span>Single</span></li>
+                  <li><strong>Roleplay</strong><span>NSFW</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card dragon-thorn">
+              <div class="imperium-portrait">
+                <img src="images/JerichoTabito.png" alt="Jericho Tabito portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Jericho Tabito</h4>
+                <div class="imperium-title">Thornlit Siren</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Appears to be Au Ra [Dragon]</span></li>
+                  <li><strong>Age</strong><span>32</span></li>
+                  <li><strong>Gender</strong><span>Male</span></li>
+                  <li><strong>Pronouns</strong><span>He/Him</span></li>
+                  <li><strong>Staff Position</strong><span>Thornlit Siren</span></li>
+                  <li><strong>Orientation</strong><span>Pansexual</span></li>
+                  <li><strong>Relationship Status</strong><span>N/A</span></li>
+                  <li><strong>Roleplay</strong><span>NSFW / SFW</span></li>
+                  <li><strong>Alignment / Dynamics</strong><span>Dominant</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card primal-ember">
+              <div class="imperium-portrait">
+                <img src="images/JavikProwl.png" alt="Javik Prowl portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Javik Prowl</h4>
+                <div class="imperium-title">Courtesan And Entertainer</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Cosmic Dragon / Primal</span></li>
+                  <li><strong>Age</strong><span>Undisclosed</span></li>
+                  <li><strong>Gender</strong><span>Masc / Masculine</span></li>
+                  <li><strong>Pronouns</strong><span>He/Him</span></li>
+                  <li><strong>Staff Position</strong><span>Courtesan and Entertainer</span></li>
+                  <li><strong>Orientation</strong><span>Pansexual</span></li>
+                  <li><strong>Relationship Status</strong><span>Polyamorous</span></li>
+                  <li><strong>Roleplay</strong><span>NSFW and SFW, multi-paragraph stylings; inquire directly for NSFW interests.</span></li>
+                  <li><strong>Alignment / Dynamics</strong><span>Dominant</span></li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="court-roster-panel roselights-panel">
+          <div class="court-panel-head">
+            <div>
+              <span class="court-panel-kicker">Velvet Glow</span>
+              <h3 class="court-panel-title">Roselights</h3>
+              <p class="court-panel-copy">
+                Roselights are the softer radiance of Eden: luminous, elegant, and memorable presences who carry warmth, beauty, and the more delicate glow of the house.
+              </p>
+            </div>
+          </div>
+
+          <div class="court-subhead">Roselights Roster</div>
+
+          <div class="imperium-grid">
+            <article class="imperium-card many-shapes">
+              <div class="imperium-portrait">
+                <img src="images/Nashi Terrasen.png" alt="Nashi Terrasen portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Nashi Terrasen</h4>
+                <div class="imperium-title">Photographer</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Depends on the day. She comes in many shapes and forms.</span></li>
+                  <li><strong>Age</strong><span>29</span></li>
+                  <li><strong>Gender</strong><span>Female</span></li>
+                  <li><strong>Pronouns</strong><span>She/Her</span></li>
+                  <li><strong>Staff Position</strong><span>Photographer</span></li>
+                  <li><strong>Orientation</strong><span>Bisexual</span></li>
+                  <li><strong>Relationship Status</strong><span>Single</span></li>
+                  <li><strong>Roleplay</strong><span>SFW</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card gremlin-child">
+              <div class="imperium-portrait">
+                <img src="images/S'cizorTia.png" alt="S'cizor Tia portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">S'cizor Tia</h4>
+                <div class="imperium-title">The Gremlin Child</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Miqo'te, Seeker of the Sun</span></li>
+                  <li><strong>Age</strong><span>23</span></li>
+                  <li><strong>Gender</strong><span>Male</span></li>
+                  <li><strong>Pronouns</strong><span>He/Him</span></li>
+                  <li><strong>Orientation</strong><span>Bisexual, femme-leaning</span></li>
+                  <li><strong>Relationship Status</strong><span>Single</span></li>
+                  <li><strong>Roleplay</strong><span>NSFW (Mirror / Dark / Third Person)</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card ashryver-voss">
+              <div class="imperium-portrait">
+                <img src="images/RukiaAshryver-Voss.png" alt="Rukia Ashryver-Voss portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Rukia Ashryver-Voss</h4>
+                <div class="imperium-title">SFW Dancer</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Half-Elf</span></li>
+                  <li><strong>Age</strong><span>30</span></li>
+                  <li><strong>Gender</strong><span>Female</span></li>
+                  <li><strong>Pronouns</strong><span>She/Her</span></li>
+                  <li><strong>Staff Position</strong><span>SFW Dancer</span></li>
+                  <li><strong>Orientation</strong><span>Bisexual</span></li>
+                  <li><strong>Relationship Status</strong><span>Married</span></li>
+                  <li><strong>Roleplay</strong><span>SFW</span></li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const petalLayer = document.getElementById("petal-fall");
+    const petalCount = window.matchMedia("(max-width: 900px), (prefers-reduced-motion: reduce)").matches ? 0 : 8;
+
+    for (let i = 0; i < petalCount; i += 1) {
+      const petal = document.createElement("span");
+      petal.className = "petal";
+      petal.style.left = `${Math.random() * 100}%`;
+      petal.style.opacity = `${0.28 + Math.random() * 0.24}`;
+      petal.style.setProperty("--size", `${28 + Math.random() * 28}px`);
+      petal.style.setProperty("--drift", `${-14 + Math.random() * 28}px`);
+      petal.style.animationDuration = `${8.5 + Math.random() * 4.5}s, ${2.8 + Math.random() * 1.2}s, ${6 + Math.random() * 2.4}s`;
+      petal.style.animationDelay = `${Math.random() * -20}s, ${Math.random() * -8}s, ${Math.random() * -8}s`;
+      petalLayer.appendChild(petal);
+    }
+  </script>
+</body>
+</html>
