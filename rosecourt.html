@@ -1978,7 +1978,7 @@
     .court-roster-panel {
       --panel-accent: rgba(173, 110, 238, 0.18);
       position: relative;
-      padding: 1.45rem;
+      padding: 0;
       border-radius: 1.8rem;
       background:
         radial-gradient(circle at 16% 16%, rgba(255, 255, 255, 0.14), transparent 16%),
@@ -2015,6 +2015,74 @@
     .court-roster-panel.imperium-panel { --panel-accent: rgba(193, 112, 210, 0.2); }
     .court-roster-panel.thornlit-panel { --panel-accent: rgba(184, 72, 90, 0.2); }
     .court-roster-panel.roselights-panel { --panel-accent: rgba(221, 184, 112, 0.2); }
+
+    .court-accordion {
+      position: relative;
+      z-index: 1;
+    }
+
+    .court-accordion summary {
+      list-style: none;
+    }
+
+    .court-accordion summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .court-accordion-summary {
+      position: relative;
+      display: block;
+      padding: 1.45rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .court-accordion-summary:focus-visible {
+      outline: 2px solid rgba(255, 232, 255, 0.7);
+      outline-offset: -0.2rem;
+      border-radius: 1.35rem;
+    }
+
+    .court-accordion-content {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 260ms ease;
+    }
+
+    .court-accordion[open] .court-accordion-content {
+      grid-template-rows: 1fr;
+    }
+
+    .court-accordion-scroll {
+      min-height: 0;
+      overflow: hidden;
+      padding: 0 1.45rem 1.45rem;
+    }
+
+    .court-accordion-shell {
+      max-height: min(68vh, 58rem);
+      overflow-y: auto;
+      padding-right: 0.45rem;
+      scrollbar-width: thin;
+      scrollbar-color: color-mix(in srgb, var(--panel-accent) 88%, rgba(255, 255, 255, 0.18)) transparent;
+    }
+
+    .court-accordion-shell::-webkit-scrollbar {
+      width: 0.6rem;
+    }
+
+    .court-accordion-shell::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 999px;
+    }
+
+    .court-accordion-shell::-webkit-scrollbar-thumb {
+      border-radius: 999px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)),
+        color-mix(in srgb, var(--panel-accent) 84%, rgba(18, 9, 28, 0.8));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
 
     .court-panel-head {
       display: grid;
@@ -2053,24 +2121,49 @@
       line-height: 1.65;
     }
 
-    .court-panel-pill {
+    .court-panel-chevron {
       justify-self: end;
       align-self: start;
-      padding: 0.72rem 1rem;
+      width: 2.7rem;
+      height: 2.7rem;
       border-radius: 999px;
       border: 1px solid color-mix(in srgb, var(--panel-accent) 34%, rgba(245, 226, 255, 0.18));
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04)),
-        color-mix(in srgb, var(--panel-accent) 42%, rgba(24, 12, 36, 0.68));
-      color: #fff1fb;
-      font-family: "Cinzel", serif;
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
+        radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.16), transparent 55%),
+        color-mix(in srgb, var(--panel-accent) 44%, rgba(20, 10, 31, 0.76));
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 0 18px color-mix(in srgb, var(--panel-accent) 48%, transparent);
+      position: relative;
+      transition: transform 220ms ease, box-shadow 220ms ease;
+    }
+
+    .court-panel-chevron::before,
+    .court-panel-chevron::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0.8rem;
+      height: 2px;
+      border-radius: 999px;
+      background: #fff1fb;
+      transform-origin: center;
+    }
+
+    .court-panel-chevron::before {
+      transform: translate(-62%, -50%) rotate(42deg);
+    }
+
+    .court-panel-chevron::after {
+      transform: translate(-8%, -50%) rotate(-42deg);
+    }
+
+    .court-accordion[open] .court-panel-chevron {
+      transform: rotate(180deg);
       box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.14),
-        0 0 16px color-mix(in srgb, var(--panel-accent) 90%, transparent),
-        0 0 28px color-mix(in srgb, var(--panel-accent) 42%, transparent);
+        0 0 22px color-mix(in srgb, var(--panel-accent) 62%, transparent);
     }
 
     .court-empty-grid {
@@ -2249,6 +2342,7 @@
     .imperium-card.gremlin-child { --court-accent: rgba(226, 176, 96, 0.22); }
     .imperium-card.rose-warden { --court-accent: rgba(160, 128, 216, 0.22); }
     .imperium-card.ashryver-voss { --court-accent: rgba(138, 120, 207, 0.22); }
+    .imperium-card.profile-pending { --court-accent: rgba(186, 132, 224, 0.22); }
 
     .imperium-portrait {
       position: relative;
@@ -2266,6 +2360,7 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.08),
         inset 0 -12px 22px rgba(0, 0, 0, 0.18),
         0 16px 30px rgba(0, 0, 0, 0.18);
+      overflow: hidden;
     }
 
     .imperium-portrait::before {
@@ -2295,6 +2390,73 @@
       object-fit: contain;
       object-position: center;
       transform: rotate(90deg) scale(1.28);
+    }
+
+    .imperium-card.profile-pending .imperium-portrait img {
+      object-fit: cover;
+      object-position: center 18%;
+      padding: 0;
+      background: none;
+      transform: scale(1.04);
+      transform-origin: center;
+    }
+
+    .imperium-card.profile-pending .imperium-portrait img[src$="logo2.png"] {
+      object-fit: contain;
+      object-position: center;
+      padding: 1rem;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.06), rgba(13, 6, 20, 0.88));
+      transform: none;
+    }
+
+    .imperium-card.profile-pending .imperium-portrait img[src$="Lupin.png"] {
+      object-position: center 10%;
+      transform: scale(1.12);
+    }
+
+    .imperium-card.profile-pending .imperium-portrait img[src$="Calypso.png"] {
+      object-position: center 14%;
+      transform: scale(1.12);
+    }
+
+    .imperium-card.profile-pending .imperium-portrait img[src$="Seraphine.png"] {
+      object-position: center 16%;
+      transform: scale(1.08);
+    }
+
+    .imperium-card.profile-pending .imperium-portrait img[src$="AergesRis.jpg"] {
+      object-position: center 18%;
+      transform: scale(1.08);
+    }
+
+    .imperium-card.profile-pending .imperium-portrait img[src$="Valthera.png"] {
+      object-position: center 34%;
+      transform: scale(1.3);
+    }
+
+    .imperium-card.profile-pending .imperium-portrait img[src$="Tissarra.png"] {
+      object-position: center 14%;
+      transform: scale(1.08);
+    }
+
+    .imperium-card.profile-pending .imperium-portrait img[src$="MitsukeWraithe.png"] {
+      object-position: 36% 20%;
+      transform: scale(1.08);
+    }
+
+    .imperium-card.profile-pending .imperium-portrait img[src$="GrimmHollows.png"] {
+      object-position: center 16%;
+      transform: scale(1.12);
+    }
+
+    .imperium-card.profile-pending .imperium-portrait img[src$="YamatoBlair.png"] {
+      object-position: center 16%;
+      transform: scale(1.14);
+    }
+
+    .imperium-card.profile-pending .imperium-portrait img[src$="Amai Mae.png"] {
+      object-position: center 26%;
+      transform: scale(1.18);
     }
 
     .imperium-copy {
@@ -2479,7 +2641,7 @@
         grid-template-columns: 1fr;
       }
 
-      .court-panel-pill {
+      .court-panel-chevron {
         justify-self: start;
       }
 
@@ -2520,6 +2682,16 @@
         padding: 1rem;
       }
 
+      .court-accordion-summary,
+      .court-accordion-scroll {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .court-accordion-scroll {
+        padding-bottom: 1rem;
+      }
+
       .center-oval {
         inset: 3rem 2.8rem;
       }
@@ -2558,10 +2730,6 @@
 
       .court-blurb p {
         font-size: 0.93rem;
-      }
-
-      .court-roster-panel {
-        padding: 1.05rem;
       }
 
       .court-panel-copy {
@@ -2701,19 +2869,25 @@
 
       <div class="court-roster">
         <section class="court-roster-panel imperium-panel">
-          <div class="court-panel-head">
-            <div>
-              <span class="court-panel-kicker">Inner Circle</span>
-              <h3 class="court-panel-title">Imperium</h3>
-              <p class="court-panel-copy">
-                The Imperium stands at the center of Eden's court: the founders, keepers, and guiding hands who shape the venue's tone, direction, and identity night after night.
-              </p>
-            </div>
-          </div>
+          <details class="court-accordion" open>
+            <summary class="court-accordion-summary">
+              <div class="court-panel-head">
+                <div>
+                  <span class="court-panel-kicker">Inner Circle</span>
+                  <h3 class="court-panel-title">Imperium</h3>
+                  <p class="court-panel-copy">
+                    The Imperium stands at the center of Eden's court: the founders, keepers, and guiding hands who shape the venue's tone, direction, and identity night after night.
+                  </p>
+                </div>
+                <span class="court-panel-chevron" aria-hidden="true"></span>
+              </div>
+            </summary>
+            <div class="court-accordion-content">
+              <div class="court-accordion-scroll">
+                <div class="court-accordion-shell">
+                  <div class="court-subhead">Imperium Roster</div>
 
-          <div class="court-subhead">Imperium Roster</div>
-
-          <div class="imperium-grid">
+                  <div class="imperium-grid">
             <article class="imperium-card thornheart">
               <div class="imperium-portrait">
                 <img src="images/Nyxi2.png" alt="Nyxi Cinnabelle portrait" />
@@ -2774,40 +2948,72 @@
               </div>
             </article>
 
-          </div>
+            <article class="imperium-card profile-pending">
+              <div class="imperium-portrait">
+                <img src="images/logo2.png" alt="Anu-Kael profile pending" />
+              </div>
+              <div class="imperium-copy">
+                <h3 class="imperium-name">Anu-Kael</h3>
+                <div class="imperium-title">The Forsaken Jackal</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Cosmic Jackal</span></li>
+                  <li><strong>Age</strong><span>I have watched the sands bury kingdoms... and still I remain.</span></li>
+                  <li><strong>Gender</strong><span>Male</span></li>
+                  <li><strong>Pronouns</strong><span>He/Him</span></li>
+                  <li><strong>Staff Position</strong><span>Manager</span></li>
+                  <li><strong>Orientation</strong><span>Straight</span></li>
+                  <li><strong>Relationship Status</strong><span>Taken</span></li>
+                  <li><strong>Roleplay</strong><span>SFW / NSFW</span></li>
+                  <li><strong>Profile</strong><span>A solemn divine exile and guardian of souls, Anu-Kael walks the mortal world with ancient purpose while trying to understand the strange rhythms of mortal life.</span></li>
+                </ul>
+              </div>
+            </article>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
         </section>
 
         <section class="court-roster-panel thornlit-panel">
-          <div class="court-panel-head">
-            <div>
-              <span class="court-panel-kicker">After Dark</span>
-              <h3 class="court-panel-title">Thornlit</h3>
-              <p class="court-panel-copy">
-                Thornlit holds the sharper, more tempting edge of the court: roses with bite, darker allure, and a presence meant to leave a mark long after the night is over.
-              </p>
-            </div>
-          </div>
+          <details class="court-accordion">
+            <summary class="court-accordion-summary">
+              <div class="court-panel-head">
+                <div>
+                  <span class="court-panel-kicker">After Dark</span>
+                  <h3 class="court-panel-title">Thornlit</h3>
+                  <p class="court-panel-copy">
+                    Thornlit holds the sharper, more tempting edge of the court: roses with bite, darker allure, and a presence meant to leave a mark long after the night is over.
+                  </p>
+                </div>
+                <span class="court-panel-chevron" aria-hidden="true"></span>
+              </div>
+            </summary>
+            <div class="court-accordion-content">
+              <div class="court-accordion-scroll">
+                <div class="court-accordion-shell">
+                  <div class="court-subhead">Thornlit Roster</div>
 
-          <div class="court-subhead">Thornlit Roster</div>
-
-          <div class="imperium-grid">
+                  <div class="imperium-grid">
             <article class="imperium-card pup-bloom">
               <div class="imperium-portrait">
                 <img src="images/MarikoGriehaneux.png" alt="Mariko Griehaneux portrait" />
               </div>
               <div class="imperium-copy">
                 <h4 class="imperium-name">Mariko Griehaneux</h4>
-                <div class="imperium-title">Pup</div>
+                <div class="imperium-title">Courtesan</div>
                 <ul class="imperium-list">
-                  <li><strong>Race</strong><span>Half Lupin / Half Hyur hybrid</span></li>
+                  <li><strong>Race</strong><span>Half Lupin / Half Hyur hybrid (Just call her Pup)</span></li>
                   <li><strong>Age</strong><span>26</span></li>
                   <li><strong>Gender</strong><span>Female</span></li>
                   <li><strong>Pronouns</strong><span>She/They</span></li>
                   <li><strong>Staff Position</strong><span>Courtesan</span></li>
-                  <li><strong>Orientation</strong><span>Pansexual, femme-leaning</span></li>
+                  <li><strong>Orientation</strong><span>Pansexual but heavy femme leaning</span></li>
                   <li><strong>Relationship Status</strong><span>Poly</span></li>
                   <li><strong>Roleplay</strong><span>NSFW / SFW</span></li>
                   <li><strong>Alignment / Dynamics</strong><span>Submissive</span></li>
+                  <li><strong>Profile</strong><span>Soft, gentle, and caring, Mariko brings affectionate energy, patience, and an eager willingness to move at her partner's pace.</span></li>
                 </ul>
               </div>
             </article>
@@ -2872,23 +3078,162 @@
                 </ul>
               </div>
             </article>
-          </div>
+
+            <article class="imperium-card profile-pending">
+              <div class="imperium-portrait">
+                <img src="images/Lupin.png" alt="Lupin Astralogia portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Lupin Astralogia</h4>
+                <div class="imperium-title">Courtesan</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Void Corrupt Dragon</span></li>
+                  <li><strong>Age</strong><span>32</span></li>
+                  <li><strong>Pronouns</strong><span>He/Him</span></li>
+                  <li><strong>Staff Position</strong><span>Courtesan</span></li>
+                  <li><strong>Orientation</strong><span>Bisexual</span></li>
+                  <li><strong>Relationship Status</strong><span>Single</span></li>
+                  <li><strong>Roleplay</strong><span>NSFW / SFW</span></li>
+                  <li><strong>Alignment / Dynamics</strong><span>True Switch</span></li>
+                  <li><strong>Profile</strong><span>A gentle, affectionate presence who leans into comfort, attentiveness, and flexibility in the roles he plays.</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card profile-pending">
+              <div class="imperium-portrait">
+                <img src="images/Calypso.png" alt="Calypso Takeo portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Calypso Takeo</h4>
+                <div class="imperium-title">Courtesan</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Appears Au Ra [Succubus]</span></li>
+                  <li><strong>Gender</strong><span>Fem / Feminine</span></li>
+                  <li><strong>Pronouns</strong><span>She/Her</span></li>
+                  <li><strong>Staff Position</strong><span>Courtesan</span></li>
+                  <li><strong>Orientation</strong><span>Pansexual</span></li>
+                  <li><strong>Relationship Status</strong><span>Polyamorous</span></li>
+                  <li><strong>Roleplay</strong><span>NSFW and SFW, multi-paragraph stylings; please inquire directly for NSFW interests.</span></li>
+                  <li><strong>Alignment / Dynamics</strong><span>Dominant / Possessive / Intuitive / Slow-Burn Control</span></li>
+                  <li><strong>Profile</strong><span>Soft-spoken, observant, and deliberate, Calypso carries an older, heavier presence and shapes each interaction with patience, intent, and an immersive sense of control.</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card profile-pending">
+              <div class="imperium-portrait">
+                <img src="images/Seraphine.png" alt="Seraphine Onasch portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Seraphine Onasch</h4>
+                <div class="imperium-title">Courtesan</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Appears Au'ra (Succubus)</span></li>
+                  <li><strong>Gender</strong><span>Female</span></li>
+                  <li><strong>Pronouns</strong><span>She/Her</span></li>
+                  <li><strong>Staff Position</strong><span>Courtesan</span></li>
+                  <li><strong>Orientation</strong><span>Pansexual but heavy femme leaning</span></li>
+                  <li><strong>Relationship Status</strong><span>Poly</span></li>
+                  <li><strong>Roleplay</strong><span>NSFW / SFW</span></li>
+                  <li><strong>Alignment / Dynamics</strong><span>Submissive</span></li>
+                  <li><strong>Profile</strong><span>Soft, calm, and attentive, Seraphine focuses on making others feel wanted, appreciated, and fully cared for throughout the experience.</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card profile-pending">
+              <div class="imperium-portrait">
+                <img src="images/AergesRis.jpg" alt="Aerges Ris portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Aerges Ris</h4>
+                <div class="imperium-title">Shifter</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Shapeshifting Ancient / Ascian - inquire directly for other forms.</span></li>
+                  <li><strong>Age</strong><span>Forgotten</span></li>
+                  <li><strong>Gender</strong><span>Non-binary</span></li>
+                  <li><strong>Pronouns</strong><span>They/Them</span></li>
+                  <li><strong>Staff Position</strong><span>Shifter</span></li>
+                  <li><strong>Orientation</strong><span>Pansexual</span></li>
+                  <li><strong>Relationship Status</strong><span>Closed Polyamorous</span></li>
+                  <li><strong>Roleplay</strong><span>NSFW / SFW (1st, 2nd, or 3rd person; typically single-paragraph, but adaptable).</span></li>
+                  <li><strong>Alignment / Dynamics</strong><span>Switch</span></li>
+                  <li><strong>Profile</strong><span>A kind, flirtatious shapeshifter who enjoys caring conversation, adventure, and adapting their presence to the people and moments around them.</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card profile-pending">
+              <div class="imperium-portrait">
+                <img src="images/Valthera.png" alt="Valthera Verlourne portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Valthera Verlourne</h4>
+                <div class="imperium-title">Courtesan</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Vampire, appears Vieran</span></li>
+                  <li><strong>Age</strong><span>Undisclosed</span></li>
+                  <li><strong>Gender</strong><span>Fem / Feminine</span></li>
+                  <li><strong>Pronouns</strong><span>She/Her</span></li>
+                  <li><strong>Staff Position</strong><span>Courtesan</span></li>
+                  <li><strong>Orientation</strong><span>Pansexual</span></li>
+                  <li><strong>Relationship Status</strong><span>Polyamorous</span></li>
+                  <li><strong>Roleplay</strong><span>NSFW and SFW, multi-paragraph stylings; please inquire directly for NSFW interests.</span></li>
+                  <li><strong>Alignment / Dynamics</strong><span>Dominant</span></li>
+                  <li><strong>Profile</strong><span>A figure of quiet menace and velvet-shadow allure, Valthera offers deliberate attention, dangerous intimacy, and the unmistakable feeling of being chosen.</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card profile-pending">
+              <div class="imperium-portrait">
+                <img src="images/Tissarra.png" alt="Tisara Winterstorm portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Tisara Winterstorm</h4>
+                <div class="imperium-title">Courtesan</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Elezen (Succubus, can shapeshift)</span></li>
+                  <li><strong>Age</strong><span>700+</span></li>
+                  <li><strong>Gender</strong><span>Female</span></li>
+                  <li><strong>Pronouns</strong><span>She/Her</span></li>
+                  <li><strong>Staff Position</strong><span>Courtesan</span></li>
+                  <li><strong>Orientation</strong><span>Polysexual with femme lean</span></li>
+                  <li><strong>Relationship Status</strong><span>Taken / Mono</span></li>
+                  <li><strong>Roleplay</strong><span>NSFW / SFW</span></li>
+                  <li><strong>Alignment / Dynamics</strong><span>Switch</span></li>
+                  <li><strong>Profile</strong><span>A former pirate turned succubus and longtime keeper of Limsa, Tisara blends bold confidence, adaptability, and a strong focus on her partner's satisfaction.</span></li>
+                </ul>
+              </div>
+            </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
         </section>
 
         <section class="court-roster-panel roselights-panel">
-          <div class="court-panel-head">
-            <div>
-              <span class="court-panel-kicker">Velvet Glow</span>
-              <h3 class="court-panel-title">Roselights</h3>
-              <p class="court-panel-copy">
-                Roselights are the softer radiance of Eden: luminous, elegant, and memorable presences who carry warmth, beauty, and the more delicate glow of the house.
-              </p>
-            </div>
-          </div>
+          <details class="court-accordion">
+            <summary class="court-accordion-summary">
+              <div class="court-panel-head">
+                <div>
+                  <span class="court-panel-kicker">Velvet Glow</span>
+                  <h3 class="court-panel-title">Roselights</h3>
+                  <p class="court-panel-copy">
+                    Roselights are the softer radiance of Eden: luminous, elegant, and memorable presences who carry warmth, beauty, and the more delicate glow of the house.
+                  </p>
+                </div>
+                <span class="court-panel-chevron" aria-hidden="true"></span>
+              </div>
+            </summary>
+            <div class="court-accordion-content">
+              <div class="court-accordion-scroll">
+                <div class="court-accordion-shell">
+                  <div class="court-subhead">Roselights Roster</div>
 
-          <div class="court-subhead">Roselights Roster</div>
-
-          <div class="imperium-grid">
+                  <div class="imperium-grid">
             <article class="imperium-card many-shapes">
               <div class="imperium-portrait">
                 <img src="images/Nashi Terrasen.png" alt="Nashi Terrasen portrait" />
@@ -2928,33 +3273,114 @@
               </div>
             </article>
 
-            <article class="imperium-card rose-warden">
+            <article class="imperium-card profile-pending">
               <div class="imperium-portrait">
-                <img src="images/Thorktar_Gpose.png" alt="Thorktar portrait" />
+                <img src="images/MitsukeWraithe.png" alt="Mitsuki Wraithe portrait" />
               </div>
               <div class="imperium-copy">
-                <h4 class="imperium-name">Thorktar</h4>
+                <h4 class="imperium-name">Mitsuki Wraithe</h4>
+                <div class="imperium-title">SFW Dancer</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Shapeshifter Demon</span></li>
+                  <li><strong>Age</strong><span>30</span></li>
+                  <li><strong>Gender</strong><span>Female</span></li>
+                  <li><strong>Pronouns</strong><span>She/Her</span></li>
+                  <li><strong>Staff Position</strong><span>SFW Dancer</span></li>
+                  <li><strong>Orientation</strong><span>Pansexual</span></li>
+                  <li><strong>Relationship Status</strong><span>N/A</span></li>
+                  <li><strong>Roleplay</strong><span>SFW on occasion</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card profile-pending">
+              <div class="imperium-portrait">
+                <img src="images/GrimmHollows.png" alt="Grimm Hollows portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Grimm Hollows</h4>
                 <div class="imperium-title">Security</div>
                 <ul class="imperium-list">
-                  <li><strong>Race</strong><span>Something something Bunny boi</span></li>
-                  <li><strong>Age</strong><span>27</span></li>
+                  <li><strong>Race</strong><span>Shapeshifter</span></li>
+                  <li><strong>Age</strong><span>31</span></li>
                   <li><strong>Gender</strong><span>Male</span></li>
                   <li><strong>Pronouns</strong><span>He/Him</span></li>
                   <li><strong>Staff Position</strong><span>Security</span></li>
                   <li><strong>Orientation</strong><span>Straight</span></li>
-                  <li><strong>Relationship Status</strong><span>Taken, Monogamous</span></li>
+                  <li><strong>Relationship Status</strong><span>N/A</span></li>
+                  <li><strong>Roleplay</strong><span>No RP</span></li>
+                  <li><strong>Profile</strong><span>A shape-shifting bouncer focused on keeping an eye on the room and making sure everyone is having fun while following the rules.</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="imperium-card profile-pending">
+              <div class="imperium-portrait">
+                <img src="images/YamatoBlair.png" alt="Yamato Blair portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Yamato Blair</h4>
+                <div class="imperium-title">Gposer</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Mostly a cat boy</span></li>
+                  <li><strong>Age</strong><span>23</span></li>
+                  <li><strong>Gender</strong><span>Male</span></li>
+                  <li><strong>Pronouns</strong><span>He/Him</span></li>
+                  <li><strong>Staff Position</strong><span>Gposer</span></li>
+                  <li><strong>Orientation</strong><span>Bisexual</span></li>
+                  <li><strong>Relationship Status</strong><span>Taken</span></li>
                   <li><strong>Roleplay</strong><span>No RP</span></li>
                 </ul>
               </div>
             </article>
 
-          </div>
+            <article class="imperium-card profile-pending">
+              <div class="imperium-portrait">
+                <img src="images/Amai Mae.png" alt="Amai Mae portrait" />
+              </div>
+              <div class="imperium-copy">
+                <h4 class="imperium-name">Amai Mae</h4>
+                <div class="imperium-title">Bartender</div>
+                <ul class="imperium-list">
+                  <li><strong>Race</strong><span>Xaela (sometimes miqo, rarely bun)</span></li>
+                  <li><strong>Age</strong><span>27</span></li>
+                  <li><strong>Gender</strong><span>Female</span></li>
+                  <li><strong>Pronouns</strong><span>She/Her</span></li>
+                  <li><strong>Staff Position</strong><span>Bartender</span></li>
+                  <li><strong>Orientation</strong><span>Pansexual</span></li>
+                  <li><strong>Relationship Status</strong><span>Single</span></li>
+                  <li><strong>Roleplay</strong><span>Both okay, but ask first please.</span></li>
+                  <li><strong>Profile</strong><span>Refined on the surface and a wild child underneath, Amai brings class, attitude, and a sharp tongue to the room.</span></li>
+                </ul>
+              </div>
+            </article>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
         </section>
       </div>
     </section>
   </main>
 
   <script>
+    const courtAccordions = [...document.querySelectorAll(".court-accordion")];
+    for (const accordion of courtAccordions) {
+      accordion.addEventListener("toggle", () => {
+        if (!accordion.open) {
+          return;
+        }
+
+        for (const other of courtAccordions) {
+          if (other !== accordion) {
+            other.open = false;
+          }
+        }
+      });
+    }
+
     const petalLayer = document.getElementById("petal-fall");
     const petalCount = window.matchMedia("(max-width: 900px), (prefers-reduced-motion: reduce)").matches ? 0 : 8;
 
